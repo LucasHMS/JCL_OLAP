@@ -34,7 +34,7 @@ public final class Index {
 		String[] attributes=null;
 		int numD=0;
 		int numM=0;
-		String text = null;		
+		String text = "";		
 		
 		long time = System.nanoTime();
 		String[] filesF = null;
