@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import util.CircularArrayList;
 
 import java.util.Map.Entry;
 
@@ -15,7 +16,9 @@ public class Producer
 {
 	private List<Entry<Integer, String>> colection = new ArrayList<>();
 	private JCL_facade jcl = JCL_FacadeImpl.getInstance();
+	private List<Entry<String, String>> host;
 	private String tuplas;
+	private int contHost;
 	
 	public Producer()
 	{}
@@ -25,6 +28,7 @@ public class Producer
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;
+		getHosts();
 		
 		while(br.ready())
 		{
@@ -52,7 +56,17 @@ public class Producer
 	
 	public void sendBuffer()
 	{
-		
+		Object[] args= {colection};
+		jcl.executeOnDevice(host.get(contHost), "Consumer", "save", args);
+		contHost++;
+	}
+	
+	public void getHosts()
+	{
+		host = new CircularArrayList<>();
+		host = jcl.getDevices();
+	 // registra a classe
+		jcl.register(Consumer.class, "Consumer");
 	}
 	
 }
