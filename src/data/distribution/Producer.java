@@ -25,6 +25,7 @@ public class Producer
 	
 	public void readTupla() throws IOException
 	{
+		tuplas = "input/NorthwindSalesData.data";
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;
@@ -56,7 +57,16 @@ public class Producer
 	
 	public void sendBuffer()
 	{
-		Object[] args= {colection};
+		int machineID;
+		if(contHost >= host.size())
+		{
+			machineID = contHost - host.size();
+		}
+		else
+		{
+			machineID = contHost;
+		}
+		Object[] args= {colection, machineID};
 		jcl.executeOnDevice(host.get(contHost), "Consumer", "save", args);
 		contHost++;
 	}
