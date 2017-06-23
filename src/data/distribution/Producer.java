@@ -1,6 +1,7 @@
 package data.distribution;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,9 +9,11 @@ import java.util.List;
 import util.CircularArrayList;
 
 import java.util.Map.Entry;
+import java.util.concurrent.Future;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
+import interfaces.kernel.JCL_result;
 
 public class Producer 
 {
@@ -18,30 +21,32 @@ public class Producer
 	private JCL_facade jcl = JCL_FacadeImpl.getInstance();
 	private List<Entry<String, String>> host;
 	private String tuplas;
-	private int contHost;
+	private int contHost=0;
+	private List<Future<JCL_result>> results = new ArrayList<>();
 	
 	public Producer()
 	{}
 	
-	public void readTupla() throws IOException
+	public void readTupla(int size) throws IOException
 	{
 	//  inicio variaveis
 		tuplas = "input/NorthwindSalesData.data";
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;
+		int k = 0;
 	//  Passo-1: lista circular
 		getHosts();
 		
-		while(br.ready())
-		{
 		//  recebe tupla do arquivo
-			line = br.readLine();
+		while((line = br.readLine()) != null)
+		{
 		//  Passo-2: cria uma lista de tuplas
-			makeBuffer(line, i);
+			makeBuffer(line, k);
 		//	incrementa a chave
 			i++;
-			if(i == 1000)
+			k++;
+			if(i == size)
 			{
 			//	Passo-3: envia para as maquinas
 				sendBuffer();
@@ -54,6 +59,9 @@ public class Producer
 		{
 			sendBuffer();
 		}
+		jcl.getAllResultBlocking(results);
+		jcl.cleanEnvironment();
+		jcl.destroy();
 	}
 	
 	public void makeBuffer(String line, int i)
@@ -71,12 +79,13 @@ public class Producer
 		if(contHost >= host.size())
 		{
 			machineID = contHost - host.size();
+			while(machineID >= host.size()) machineID = contHost - host.size();
 		}
 		else
 		{
 			machineID = contHost;
 		}
-		Object[] args= {colection, machineID};
+		Object[] args= {new ArrayList<>(colection), machineID};
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
 		jcl.executeOnDevice(host.get(contHost), "Consumer", "save", args);
 		contHost++;
@@ -84,14 +93,12 @@ public class Producer
 	
 	public void getHosts()
 	{
-	//	registra as classe externas
-		jcl.register(MyEntry.class, "MyEntry");
-		jcl.register(util.CircularArrayList.class, "CircularArrayList");
-	//  cria uma lista circular dos devices do cluster
-		host = new CircularArrayList<>();
+		File f1 = new File("lib/Consumer.jar");
+		File f2 = new File("lib/MyEntry.jar");
+		File f3 = new File("lib/CircularArrayList.jar");
+		File [] jars = {f1,f2,f3};
+		jcl.register(jars, "Consumer");
 		host = jcl.getDevices();
-	//  registra a classe
-		jcl.register(Consumer.class, "Consumer");
 	}
 	
 }
