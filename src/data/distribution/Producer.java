@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import util.CircularArrayList;
 
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
@@ -49,7 +48,9 @@ public class Producer
 			if(i == size)
 			{
 			//	Passo-3: envia para as maquinas
+				System.out.println("enviou " + i);
 				sendBuffer();
+				System.out.println("finalizou envio");
 				colection.clear();
 				i = 0;
 			}
@@ -57,9 +58,13 @@ public class Producer
 	//	envia a colecao caso sobre tuplas no fim arquivo
 		if(i != 0)
 		{
+			System.out.println("enviou o que sobrou");
+			System.out.println("enviou " + i);
 			sendBuffer();
+			System.out.println("finalizou envio");
 		}
 		jcl.getAllResultBlocking(results);
+		System.out.println("finalizou");
 		jcl.cleanEnvironment();
 		jcl.destroy();
 	}
@@ -76,18 +81,24 @@ public class Producer
 	{
 		int machineID;
 	//	recebe o ID da maquina para onde a lista de tuplas ira
-		if(contHost >= host.size())
+		if(contHost == host.size())
 		{
 			machineID = contHost - host.size();
-			while(machineID >= host.size()) machineID = contHost - host.size();
+		}
+		else if(contHost>host.size())
+		{
+			machineID = contHost - host.size();
+			while(machineID >= host.size()) machineID -= host.size();
 		}
 		else
 		{
 			machineID = contHost;
 		}
 		Object[] args= {new ArrayList<>(colection), machineID};
+	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
-		jcl.executeOnDevice(host.get(contHost), "Consumer", "save", args);
+		results.add(jcl.execute("Consumer", "save", args));
+		System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}
 	
