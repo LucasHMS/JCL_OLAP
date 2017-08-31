@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import it.unimi.dsi.fastutil.*;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import implementations.collections.JCLHashMap;;
 
 public class Consumer {
@@ -17,21 +20,26 @@ public class Consumer {
 		System.out.println("divide factor: "+divide_factor);
 		int k = 0;
 		int i = 0;
+
 		for(;i<localCores;i++){
-			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
+			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
+			
 			System.out.println("core "+i);
 			for (int j = 0; j < divide_factor; j++) {
-			//	System.out.println(k);
-			//	System.out.println(buffer.get(k).getValue());
-				hm.put(buffer.get(k).getKey(), buffer.get(k).getValue());
+				m.put(buffer.get(k).getKey(), buffer.get(k).getValue());
 				k++;
 			}
+			
+			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
+			hm.putAll(m);
 		}
 		if(buffSize%localCores != 0){
-			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
+			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 			for(;k<buffSize;k++){
-				hm.put(buffer.get(k).getKey(), buffer.get(k).getValue());
+				m.put(buffer.get(k).getKey(), buffer.get(k).getValue());
 			}
+			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
+			hm.putAll(m);
 		}
 		System.out.println("finalizou para maquina " + machineID);
 	}
