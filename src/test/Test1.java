@@ -8,7 +8,7 @@ public class Test1 {
 	public static void main(String [] args){
 		Producer p = new Producer();
 		try {
-			int size = 150850;
+			int size = 5000;
 			long t1 = System.currentTimeMillis();
 			p.readTupla(size);
 			long t2 = System.currentTimeMillis();
