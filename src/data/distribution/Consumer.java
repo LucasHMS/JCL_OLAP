@@ -1,20 +1,15 @@
 package data.distribution;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import implementations.collections.JCLHashMap;;
+import implementations.collections.JCLHashMap;
+
+import util.FileManip; 
 
 public class Consumer {
 
@@ -39,7 +34,7 @@ public class Consumer {
 
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
 			hm.putAll(m);
-			writeFileTxt(m, i);
+			FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
@@ -48,12 +43,12 @@ public class Consumer {
 			}
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			hm.putAll(m);
-			writeFileTxt(m, 0);
+			FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);
 	}
 
-	/*	void writeFile(String linha) throws IOException {
+	/*	void writeFileBin(String linha) throws IOException {
 		File yourFile = new File("score.txt");
 		yourFile.createNewFile(); // if file already exists will do nothing 
 		FileOutputStream oFile = new FileOutputStream(yourFile, false);
@@ -61,23 +56,18 @@ public class Consumer {
 
 
 		ObjectOutputStream oOut = new ObjectOutputStream(new OutputStream)
-	}*/
+	}
 
 	void writeFileTxt(Map<Integer,String> m, int n_core) throws IOException {
-		FileWriter file;
-		try {
-			file = new FileWriter("arq_"+n_core+".txt",true);
-			BufferedWriter f = new BufferedWriter(file);
+		FileWriter file = new FileWriter("arq_"+n_core+".txt",true);
+		BufferedWriter f = new BufferedWriter(file);
 
-			for(Entry<Integer,String> e : m.entrySet()) {
-				String aux = e.getKey() + "|" + e.getValue();
-				f.write(aux);
-				f.newLine();
-			}
-			f.close();
-			file.close();
-		} catch (Exception e1) {
-			e1.printStackTrace();
+		for(Entry<Integer,String> e : m.entrySet()) {
+			String aux = e.getKey() + "|" + e.getValue();
+			f.write(aux);
+			f.newLine();
 		}
-	}
+		f.close();
+		file.close();
+	}*/
 }
