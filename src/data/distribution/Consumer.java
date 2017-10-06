@@ -34,7 +34,8 @@ public class Consumer {
 
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
 			hm.putAll(m);
-			FileManip.writeTuplesTxt(m, i);
+			FileManip.writeTuplesBin(m, i);
+			
 		}
 		if(buffSize%localCores != 0){
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
@@ -43,7 +44,7 @@ public class Consumer {
 			}
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			hm.putAll(m);
-			FileManip.writeTuplesTxt(m, 0);
+			FileManip.writeTuplesBin(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);
 	}
