@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
+import util.MyEntry;
 
 public class Producer 
 {

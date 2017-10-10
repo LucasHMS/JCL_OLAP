@@ -92,4 +92,84 @@ public class FileManip {
 			f.close();
 		}
 	}
+	
+	// Le os metadados que estão na maquina especifica
+		public static void readMetaData() throws IOException
+		{
+			String line = null;
+			FileReader f1 = null;
+			FileReader f2 = null;
+			try
+			{
+				f1 = new FileReader("mesurenames.mg");
+				f2 = new FileReader("dimensionsnames.mg");
+			}
+			catch(FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			BufferedReader reader1 = new BufferedReader(f1);
+			BufferedReader reader2 = new BufferedReader(f2);
+			Map<String, Integer> mesure = new JCLHashMap<>("Mesure");
+			Map<String, Integer> dimension = new JCLHashMap<>("Dimension");
+			while((line = reader1.readLine()) != null)
+			{
+				String [] lineArr = line.split("=");
+				mesure.put((lineArr[1]), Integer.parseInt(lineArr[0]));
+			}
+			while((line = reader2.readLine()) != null)
+			{
+				String [] lineArr = line.split("=");
+				dimension.put((lineArr[1]), Integer.parseInt(lineArr[0]));
+			}
+			f1.close();
+			f2.close();
+		}
+		
+	// Escreve os metadados em todas as maquinas do cluster
+		public static void writeMetaData(String mesure, String dimensions) throws IOException
+		{
+			FileWriter f1 = null;
+			FileWriter f2 = null;
+			try
+			{
+				f1 = new FileWriter("mesurenames.mg");
+				f2 = new FileWriter("dimensionsnames.mg");
+			}
+			catch(FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			BufferedWriter writer1 = new BufferedWriter(f1);
+			BufferedWriter writer2 = new BufferedWriter(f2);
+			writer1.write(mesure);
+			writer2.write(dimensions);
+			f1.close();
+			f2.close();
+		}
+		
+	// le o arquivo metaData pela primeira vez
+		public static String metaDataToString(String nome) throws IOException
+		{
+			String line = null;
+			FileReader f = null;
+			try
+			{
+				f = new FileReader(nome);
+			}
+			catch(FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			StringBuffer b = new StringBuffer();
+			BufferedReader reader = new BufferedReader(f);
+			while((line = reader.readLine()) != null)
+			{
+				b.append(line+'\n');
+			}
+			f.close();
+			return b.toString();
+			
+		}
+		
 }

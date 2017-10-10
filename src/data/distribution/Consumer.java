@@ -34,7 +34,7 @@ public class Consumer {
 
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
 			hm.putAll(m);
-			FileManip.writeTuplesBin(m, i);
+			FileManip.writeTuplesTxt(m, i);
 			
 		}
 		if(buffSize%localCores != 0){
@@ -44,31 +44,8 @@ public class Consumer {
 			}
 			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			hm.putAll(m);
-			FileManip.writeTuplesBin(m, 0);
+			FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);
 	}
-
-	/*	void writeFileBin(String linha) throws IOException {
-		File yourFile = new File("score.txt");
-		yourFile.createNewFile(); // if file already exists will do nothing 
-		FileOutputStream oFile = new FileOutputStream(yourFile, false);
-		FastBufferedOutputStream fastFile = new FastBufferedOutputStream(oFile);
-
-
-		ObjectOutputStream oOut = new ObjectOutputStream(new OutputStream)
-	}
-
-	void writeFileTxt(Map<Integer,String> m, int n_core) throws IOException {
-		FileWriter file = new FileWriter("arq_"+n_core+".txt",true);
-		BufferedWriter f = new BufferedWriter(file);
-
-		for(Entry<Integer,String> e : m.entrySet()) {
-			String aux = e.getKey() + "|" + e.getValue();
-			f.write(aux);
-			f.newLine();
-		}
-		f.close();
-		file.close();
-	}*/
 }
