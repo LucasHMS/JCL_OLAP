@@ -97,7 +97,7 @@ public class FileManip {
 			f.close();
 		}
 	}
-	
+/*	
 // funcao do index
 	public static void readIndex(int machineID, int fileID) throws IOException
 	{
@@ -228,7 +228,7 @@ public class FileManip {
 		f1.close();
 		f2.close();
 	}
-	
+*/
 // le o arquivo metaData pela primeira vez
 	public static String metaDataToString(String nome) throws IOException
 	{

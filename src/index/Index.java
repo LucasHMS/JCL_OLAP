@@ -9,13 +9,16 @@ import java.io.IOException;
 
 import util.FileManip;
 
-
-
 public class Index {
 	JCL_facade jcl = JCL_FacadeImpl.getInstance();
+	
+	public Index() {
+		jcl = JCL_FacadeImpl.getInstance();
+		jcl.register(JCL_Index.class, "JCL_Index");		
+	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
-	public void metaData()
+	public void loadMetadata()
 	{
 		String mesure = null, dimension = null;
 		try {
@@ -23,20 +26,17 @@ public class Index {
 			mesure = FileManip.metaDataToString("input/mesuresnames.mg");
 			dimension = FileManip.metaDataToString("input/dimensionsnames.mg");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		jcl.register(FileManip.class, "fileManip");
 		Object [] args = {mesure, dimension};
 		// escreve os arquivos metadata em todas as maquinas do cluster
-		jcl.executeAll("fileManip", "writeMetaData", args);
+		jcl.getAllResultBlocking(jcl.executeAll("fileManip", "writeMetaData", args));
 		// cria as hashMaps com os metadados para cada maquina
-		jcl.executeAll("fileManip", "readMetaData", null);
+		jcl.getAllResultBlocking(jcl.executeAll("fileManip", "readMetaData", null));
 	}
 
 	public void createIndex(){
-		jcl.register(FileManip.class, "Index");
 		Map<Entry<String,String>,Integer> hosts = jcl.getAllDevicesCores();
 		Object [][] arg = new Object[hosts.size()][];
 		int i = 0;
@@ -46,13 +46,7 @@ public class Index {
 				arg[i][j] = a; 
 			}
 		}
-
-		jcl.executeAllCores("Index", "createIndex", arg);
+		
+		jcl.getAllResultBlocking(jcl.executeAllCores("JCL_Index", "createIndex", arg));
 	}
-
-	public static void main(String [] args) {
-
-
-	}
-
 }

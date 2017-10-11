@@ -1,9 +1,9 @@
-
-import implementations.util.Entry;
+package test;
 
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
 import implementations.sm_kernel.JCL_FacadeImpl;
+import index.IndexV1;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
 
 import data.distribution.FileManip;
 
-public class Main {
+public class MainV1 {
 	public static void main (String [] args){
 		/*
 		 * Invoca a leitura do arquivo e apartir das tuplas retornadas,
@@ -21,7 +21,7 @@ public class Main {
 		 **/
 		JCL_facade jcl = JCL_FacadeImpl.getInstance();
 
-		jcl.register(Index.class, "Index");
+		jcl.register(IndexV1.class, "Index");
 
 		FileManip fm;
 		List<String []>tuplas = null;
