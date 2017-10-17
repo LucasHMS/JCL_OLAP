@@ -246,7 +246,8 @@ public class FileManip {
 		BufferedReader reader = new BufferedReader(f);
 		while((line = reader.readLine()) != null)
 		{
-			b.append(line+'\n');
+			b.append(line);
+			b.append('\n');
 		}
 		f.close();
 		return b.toString();

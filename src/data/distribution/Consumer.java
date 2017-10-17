@@ -32,8 +32,8 @@ public class Consumer {
 				k++;
 			}
 
-			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
-			hm.putAll(m);
+			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
+			//hm.putAll(m);
 			FileManip.writeTuplesTxt(m, i);
 			
 		}
@@ -42,8 +42,8 @@ public class Consumer {
 			for(;k<buffSize;k++){
 				m.put(buffer.get(k).getKey(), buffer.get(k).getValue());
 			}
-			Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
-			hm.putAll(m);
+			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
+			//hm.putAll(m);
 			FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);

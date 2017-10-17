@@ -18,7 +18,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public class JCL_Index {
 
 	// funcao do index
-	public void createIndex(int machineID, int fileID) throws IOException
+	public void createIndex(int fileID) throws IOException
 	{
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
@@ -40,12 +40,12 @@ public class JCL_Index {
 		// map dos indices invertidos
 		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
 		// map do jcl para dar putAll
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex");
+		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+fileID);
 
 		// map dos mesure index
 		Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
 		// map do jcl para dar putAll
-		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex"); 
+		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+fileID); 
 
 		BufferedReader reader = new BufferedReader(f);
 		reader.readLine();
@@ -111,7 +111,9 @@ public class JCL_Index {
 		BufferedWriter writer2 = new BufferedWriter(f2);
 		writer1.write(mesure);
 		writer2.write(dimensions);
+		writer1.close();
 		f1.close();
+		writer2.close();
 		f2.close();
 	}
 
@@ -146,6 +148,10 @@ public class JCL_Index {
 		}
 		f1.close();
 		f2.close();
+		
+		System.out.println(mesure.size() + " - " + dimension.size());
+		System.out.println("Mesure Map:\n " + mesure.toString());
+		System.out.println("Dimension Map:\n " + dimension.toString());
 	}
 
 }

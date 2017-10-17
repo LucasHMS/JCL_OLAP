@@ -64,6 +64,9 @@ public class Producer
 			sendBuffer();
 			System.out.println("finalizou envio");
 		}
+		
+		System.out.println("Bloqueando para finalizar");
+		
 		jcl.getAllResultBlocking(results);
 		System.out.println("finalizou");
 		jcl.cleanEnvironment();
