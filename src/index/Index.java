@@ -19,7 +19,8 @@ public class Index {
 	public Index() {
 		jcl = JCL_FacadeImpl.getInstance();
 		//jcl.register(FileManip.class, "fileManip");
-		jcl.register(JCL_Index.class, "JCL_Index");	
+		jcl.register(JCL_Index.class, "JCL_Index");
+		jcl.register(StubLambari.class, "StubLambari");	
 	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
@@ -44,6 +45,9 @@ public class Index {
 
 		// escreve os arquivos metadata em todas as maquinas do cluster
 		//jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "writeMetaData", args));
+
+		// cria as hashMaps com os metadados para cada maquina
+		//jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
 		
 		try {
 			jcl.execute("JCL_Index", "writeMetaData", args).get();
@@ -52,16 +56,14 @@ public class Index {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-		// cria as hashMaps com os metadados para cada maquina
-		//jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
 	}
 
 	public void createIndex(){
-		/*Map<Entry<String,String>,Integer> hosts = jcl.getAllDevicesCores();
-		Object [][] args = new Object[hosts.size()][];
+/*			Map<Entry<String,String>,Integer> hosts = jcl.getAllDevicesCores();
+		Object [] args = new Object[jcl.getClusterCores()];
 		int i = 0;
 		for(Entry<Entry<String, String>, Integer> e : hosts.entrySet()) {
-			args[i] = new Object[e.getValue()];
+			//args[i] = new Object[e.getValue()];
 			for(int j=0;j<e.getValue();j++) {
 				Object [] a = {i,j};
 				//args[i][j] = new Object[2];
@@ -75,15 +77,15 @@ public class Index {
 				System.out.print(args[i][j]+ " ");
 			}
 			System.out.println("\n");
-		}*/
-		
-		//jcl.getAllResultBlocking(jcl.executeAllCores("JCL_Index", "createIndex", args));
-		Object [] args = {1};
+		}
+		*/
+		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "stubLambari"));
+		/*Object [] args = {1};
 		try {
 			jcl.execute("JCL_Index", "createIndex", args).get();
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
-		}
+		}*/
 		
 		Map<String, IntCollection> m1 = JCL_FacadeImpl.GetHashMap("invertedIndex_0");
 		Map<String, Int2DoubleOpenHashMap> m2 = JCL_FacadeImpl.GetHashMap("mesureIndex_0");

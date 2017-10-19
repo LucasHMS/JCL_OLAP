@@ -10,6 +10,7 @@ import java.util.Map;
 
 import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
+import interfaces.kernel.JCL_facade;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
@@ -17,9 +18,26 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class JCL_Index {
 
+	public void stubLambari(){
+		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
+		
+		int localCores = Runtime.getRuntime().availableProcessors();
+		Object [][] args = new Object[localCores][1];
+		for(int i=0; i<localCores; i++){
+			Object [] a = {i};
+			args[i][0] = a;
+		}
+		
+		System.out.println("chegou stub");
+		
+		//System.out.println(jcl.register(StubLambari.class, "StubLambari"));
+		
+		jcl.getAllResultBlocking(jcl.executeAllCores("StubLambari", "createIndex", args));
+	}
 	// funcao do index
 	public void createIndex(int fileID) throws IOException
 	{
+		System.out.println("criando indice apartir do arquivo " + fileID);
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimesion");
