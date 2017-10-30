@@ -8,7 +8,8 @@ import java.util.Map.Entry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import implementations.collections.JCLHashMap;
-
+import implementations.sm_kernel.JCL_FacadeImpl;
+import interfaces.kernel.JCL_facade;
 import util.FileManip; 
 
 public class Consumer {
@@ -22,7 +23,8 @@ public class Consumer {
 		System.out.println("divide factor: "+divide_factor);
 		int k = 0;
 		int i = 0;
-
+		JCL_facade jcl = JCL_FacadeImpl.getInstance();
+		
 		for(;i<localCores;i++){
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 
@@ -34,8 +36,10 @@ public class Consumer {
 
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
 			//hm.putAll(m);
-			FileManip.writeTuplesTxt(m, i);
 			
+			jcl.instantiateGlobalVar(machineID+":"+i, m);
+			
+			FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
@@ -44,6 +48,12 @@ public class Consumer {
 			}
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			//hm.putAll(m);
+			
+			Int2ObjectMap<String> m_aux = new Int2ObjectOpenHashMap<String>();
+			m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+":0");
+			m_aux.putAll(m);
+			jcl.setValueUnlocking(machineID+":0", m_aux);
+			
 			FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);
