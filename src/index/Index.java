@@ -1,5 +1,6 @@
 package index;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +21,6 @@ public class Index {
 		jcl = JCL_FacadeImpl.getInstance();
 		//jcl.register(FileManip.class, "fileManip");
 		jcl.register(JCL_Index.class, "JCL_Index");
-		jcl.register(StubLambari.class, "StubLambari");	
 	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
@@ -35,31 +35,31 @@ public class Index {
 			e.printStackTrace();
 		}
 
-/*		List<Entry<String,String>> hosts = jcl.getDevices();
+		List<Entry<String,String>> hosts = jcl.getDevices();
 		Object [][] args = new Object[hosts.size()][];
 		for(int i=0;i < hosts.size(); i++) {
 			Object [] a = {mesure, dimension};
 			args[i] = a; 
-		}	*/
-		Object [] args = {mesure, dimension};
+		}
+		//Object [] args = {mesure, dimension};
 
-		// escreve os arquivos metadata em todas as maquinas do cluster
-		//jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "writeMetaData", args));
+		//escreve os arquivos metadata em todas as maquinas do cluster
+		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "writeMetaData", args));
 
-		// cria as hashMaps com os metadados para cada maquina
-		//jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
-		
-		try {
+		//cria as hashMaps com os metadados para cada maquina
+		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
+
+/*		try {
 			jcl.execute("JCL_Index", "writeMetaData", args).get();
 			jcl.execute("JCL_Index", "readMetaData").get();
-			
+
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public void createIndex(){
-/*			Map<Entry<String,String>,Integer> hosts = jcl.getAllDevicesCores();
+		/*			Map<Entry<String,String>,Integer> hosts = jcl.getAllDevicesCores();
 		Object [] args = new Object[jcl.getClusterCores()];
 		int i = 0;
 		for(Entry<Entry<String, String>, Integer> e : hosts.entrySet()) {
@@ -78,19 +78,21 @@ public class Index {
 			}
 			System.out.println("\n");
 		}
-		*/
-		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "stubLambari"));
+		 */
+		Object o = jcl.getValue("gv_inexistente").getCorrectResult();
+		System.out.println(o==null);
+		jcl.getAllResultBlocking(jcl.executeAllCores("JCL_Index", "createIndexFromMap"));
 		/*Object [] args = {1};
 		try {
 			jcl.execute("JCL_Index", "createIndex", args).get();
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
 		}*/
-		
-		Map<String, IntCollection> m1 = JCL_FacadeImpl.GetHashMap("invertedIndex_0");
-		Map<String, Int2DoubleOpenHashMap> m2 = JCL_FacadeImpl.GetHashMap("mesureIndex_0");
-		
+
+		Map<String, IntCollection> m1 = JCL_FacadeImpl.GetHashMap("invertedIndex");
+		Map<String, Int2DoubleOpenHashMap> m2 = JCL_FacadeImpl.GetHashMap("mesureIndex");
+
 		System.out.println(m1.size() + " : " + m2.size());
-		
+
 	}
 }

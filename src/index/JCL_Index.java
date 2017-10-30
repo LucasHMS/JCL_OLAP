@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
@@ -19,9 +22,9 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class JCL_Index {
 
-/*	public void stubLambari(){
+	/*	public void stubLambari(){
 		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
-		
+
 		int localCores = Runtime.getRuntime().availableProcessors();
 		Object [][] args = new Object[localCores][1];
 		for(int i=0; i<localCores; i++){
@@ -30,9 +33,9 @@ public class JCL_Index {
 		}
 		jcl.get
 		System.out.println("chegou stub");
-		
+
 		//System.out.println(jcl.register(StubLambari.class, "StubLambari"));
-		
+
 		jcl.getAllResultBlocking(jcl.executeAllCores("StubLambari", "createIndex", args));
 	}*/
 	// funcao do index
@@ -112,48 +115,50 @@ public class JCL_Index {
 		jclMesureIndex.putAll(mesureIndex);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void createIndexFromMap() {
 		//System.out.println("criando indice apartir do arquivo " + fileID);
 		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
+
+		// pool para escolher arquivo que sera lido pelo execute do core
+		int localCores = Runtime.getRuntime().availableProcessors();
+
+		List<Integer> coreID_pool = (List<Integer>) jcl.getValueLocking("filename_pool").getCorrectResult();
+		if(coreID_pool == null){
+			coreID_pool = new ArrayList<Integer>();
+			for(int i=0; i<localCores; i++) coreID_pool.add(i);
+			jcl.instantiateGlobalVar("filename_pool", coreID_pool);
+			coreID_pool = (List<Integer>) jcl.getValueLocking("filename_pool").getCorrectResult();
+		}
+
+		int coreID = coreID_pool.remove(0);
+		jcl.setValueUnlocking("filename_pool", coreID_pool);
+
+
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimesion");
 
 		int qtdMesure = mesureMeta.size();
 
-		String line = null;
-		FileReader f = null;
-		try
-		{
-			f = new FileReader("arq_"+fileID+".txt");
-		}
-		catch(FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("0:1");
-		
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID);
+
 		// map dos indices invertidos
 		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
 		// map do jcl para dar putAll
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+fileID);
+		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
 
 		// map dos mesure index
 		Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
 		// map do jcl para dar putAll
-		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+fileID); 
+		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
-		BufferedReader reader = new BufferedReader(f);
-		reader.readLine();
-		// le linha a linha do arquivo
-		while((line = reader.readLine()) != null)
-		{
-			// separa a tupla
-			String [] splitArr = line.split("\\|");
 
-			// valor de onde a coluna das dimensions comeca. Aqui pegamos a quantidade de colunas de mesure + 1(coluna das PK)
-			int col = qtdMesure + 1;
+		for(Entry<Integer, String> e : map_core.entrySet()){
+			int pk = e.getKey();
+			String [] splitArr = e.getValue().split("\\|");
+
+			int col = qtdMesure;
 			// rodamos a quantidade de colunas das dimensions
 			for(int i=0;i<dimensionMeta.size();i++) {
 				// pega o conteudo da coluna
@@ -166,7 +171,7 @@ public class JCL_Index {
 					invertedIndex.put(d, dimensionList);
 				}
 				// pesquisa pela chave d, caso exista, adiciono mais um PK a lista
-				invertedIndex.get(d).add(Integer.parseInt(splitArr[0]));
+				invertedIndex.get(d).add(pk);
 			}
 
 			// rodamos a quantidade de colunas da mesure
@@ -186,13 +191,13 @@ public class JCL_Index {
 				mesureIndex.get(splitArr[0]).put(i, Double.parseDouble(m));			
 			}
 		}
+		
 		jclInvertedIndex.putAll(invertedIndex);
 		jclMesureIndex.putAll(mesureIndex);
-
 	}
 
 	//Escreve os metadados em todas as maquinas do cluster
-	
+
 	public static void writeMetaData(String mesure, String dimensions) throws IOException
 	{
 		FileWriter f1 = null;
@@ -247,7 +252,7 @@ public class JCL_Index {
 		}
 		f1.close();
 		f2.close();
-		
+
 		System.out.println(mesure.size() + " - " + dimension.size());
 		System.out.println("Mesure Map:\n " + mesure.toString());
 		System.out.println("Dimension Map:\n " + dimension.toString());
