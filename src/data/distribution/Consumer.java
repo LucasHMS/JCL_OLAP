@@ -59,7 +59,7 @@ public class Consumer {
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			//hm.putAll(m);
 			
-			m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+":0").getCorrectResult();
+			m_aux = (Int2ObjectMap<String>) jcl.getValueLocking("core_0").getCorrectResult();
 			m_aux.putAll(m);
 			jcl.setValueUnlocking("core_0", m_aux);
 			
