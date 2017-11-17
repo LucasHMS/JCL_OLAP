@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
@@ -115,9 +117,13 @@ public class JCL_Index {
 		jclMesureIndex.putAll(mesureIndex);
 	}
 
+	public void teste() {
+		System.out.println();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void createIndexFromMap() {
-		//System.out.println("criando indice apartir do arquivo " + fileID);
+		System.out.println("*****entrou no metodo******");
 		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
 
 		// pool para escolher arquivo que sera lido pelo execute do core
@@ -133,6 +139,9 @@ public class JCL_Index {
 		}else{
 			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
 		}
+		
+		System.out.println("*****gerenciou o core pool******");
+		
 	/*	List<Integer> coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
 		if(coreID_pool == null){
 			coreID_pool = new ArrayList<Integer>();
@@ -144,7 +153,6 @@ public class JCL_Index {
 		int coreID = coreID_pool.remove(0);
 		jcl.setValueUnlocking("coreID_pool", coreID_pool);
 
-
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimesion");
@@ -152,7 +160,7 @@ public class JCL_Index {
 		int qtdMesure = mesureMeta.size();
 
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID).getCorrectResult();
-
+		System.out.println("tamanho da map do core "+coreID+": "+map_core.size());
 		// map dos indices invertidos
 		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
 		// map do jcl para dar putAll
@@ -163,11 +171,11 @@ public class JCL_Index {
 		// map do jcl para dar putAll
 		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
+		System.out.println("*****iniciou a criação dos maps******");
 
 		for(Entry<Integer, String> e : map_core.entrySet()){
 			int pk = e.getKey();
 			String [] splitArr = e.getValue().split("\\|");
-
 			int col = qtdMesure;
 			// rodamos a quantidade de colunas das dimensions
 			for(int i=0;i<dimensionMeta.size();i++) {
@@ -183,10 +191,10 @@ public class JCL_Index {
 				// pesquisa pela chave d, caso exista, adiciono mais um PK a lista
 				invertedIndex.get(d).add(pk);
 			}
-
 			// rodamos a quantidade de colunas da mesure
 			for(int i = 1; i <= qtdMesure; i++)
 			{
+				
 				// pega o conteudo da coluna
 				String m = splitArr[i];	
 				// verifica se a map de mesures possui a chave (que nesse caso e' nossa PK)
@@ -198,12 +206,16 @@ public class JCL_Index {
 					mesureIndex.put(splitArr[0], mesureMap);
 				}
 				// Pesquisa pela chave PK, caso exista, adiciona os valores para a map int2double e adiciona ela para a map principal
-				mesureIndex.get(splitArr[0]).put(i, Double.parseDouble(m));			
+				Int2DoubleOpenHashMap aux = mesureIndex.get(splitArr[0]);
+				m = m.replace(',', '.');
+				aux.put(i, Double.parseDouble(m));
+				mesureIndex.put(splitArr[0],aux);			
 			}
 		}
 		
 		jclInvertedIndex.putAll(invertedIndex);
 		jclMesureIndex.putAll(mesureIndex);
+		System.out.println("*****finalizou a criação dos maps******");
 	}
 
 	//Escreve os metadados em todas as maquinas do cluster
@@ -262,10 +274,6 @@ public class JCL_Index {
 		}
 		f1.close();
 		f2.close();
-
-		System.out.println(mesure.size() + " - " + dimension.size());
-		System.out.println("Mesure Map:\n " + mesure.toString());
-		System.out.println("Dimension Map:\n " + dimension.toString());
 	}
 
 }

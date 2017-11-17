@@ -1,12 +1,15 @@
 package index;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
+import interfaces.kernel.JCL_result;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 
@@ -20,7 +23,7 @@ public class Index {
 	public Index() {
 		jcl = JCL_FacadeImpl.getInstance();
 		//jcl.register(FileManip.class, "fileManip");
-		jcl.register(JCL_Index.class, "JCL_Index");
+		System.out.println("registro jcl index: "+jcl.register(JCL_Index.class, "JCL_Index"));
 	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
@@ -79,20 +82,29 @@ public class Index {
 			System.out.println("\n");
 		}
 		 */
-		Object o = jcl.getValue("gv_inexistente").getCorrectResult();
-		System.out.println(o==null);
-		jcl.getAllResultBlocking(jcl.executeAllCores("JCL_Index", "createIndexFromMap"));
+		Object [] args = {};
+		List<Entry<String,String>> devices = jcl.getDevices(); System.out.println("n devices: " + devices.size());
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
+		for(Entry<String,String> e : devices) {
+			int n = jcl.getDeviceCore(e);
+			for(int i=0;i<1;i++) {
+				jcl.executeOnDevice(e, "JCL_Index", "teste");
+				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap"));
+			}
+				
+		}
+		jcl.getAllResultBlocking(tickets);
 		/*Object [] args = {1};
 		try {
 			jcl.execute("JCL_Index", "createIndex", args).get();
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
-		}*/
+		}
 
 		Map<String, IntCollection> m1 = JCL_FacadeImpl.GetHashMap("invertedIndex");
 		Map<String, Int2DoubleOpenHashMap> m2 = JCL_FacadeImpl.GetHashMap("mesureIndex");
 
-		System.out.println(m1.size() + " : " + m2.size());
+		System.out.println(m1.size() + " : " + m2.size());*/
 
 	}
 }

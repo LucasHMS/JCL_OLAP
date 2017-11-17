@@ -30,7 +30,7 @@ public class Producer
 	public void readTupla(int size) throws IOException
 	{
 	//  inicio variaveis
-		tuplas = "input/NorthwindSalesData1.data";
+		tuplas = "input/NorthwindSalesData.data";
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;
@@ -76,7 +76,7 @@ public class Producer
 	public void makeBuffer(String line, int i)
 	{
 	//	cria uma Entry que recebe a chave da tupla e a linha do arquivo
-		Entry<Integer, String> item = new MyEntry<Integer, String>(i, line);
+		Entry<Integer, String> item = new MyEntry<Integer, String>(i, i+"|"+line);
 	//	adiciona a Entry na lista de colection
 		colection.add(item);
 	}
