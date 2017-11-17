@@ -30,7 +30,7 @@ public class Producer
 	public void readTupla(int size) throws IOException
 	{
 	//  inicio variaveis
-		tuplas = "input/NorthwindSalesData.data";
+		tuplas = "input/NorthwindSalesData1.data";
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;

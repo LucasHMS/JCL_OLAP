@@ -123,16 +123,26 @@ public class JCL_Index {
 		// pool para escolher arquivo que sera lido pelo execute do core
 		int localCores = Runtime.getRuntime().availableProcessors();
 
-		List<Integer> coreID_pool = (List<Integer>) jcl.getValueLocking("filename_pool").getCorrectResult();
+		List<Integer> coreID_pool = new ArrayList<Integer>();
+		Object o = (Object) jcl.getValueLocking("coreID_pool").getCorrectResult();
+		if(o.toString().startsWith("No value found!")){
+			coreID_pool = new ArrayList<Integer>();
+			for(int i=0; i<localCores; i++) coreID_pool.add(i);
+			jcl.instantiateGlobalVar("coreID_pool", coreID_pool);
+			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
+		}else{
+			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
+		}
+	/*	List<Integer> coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
 		if(coreID_pool == null){
 			coreID_pool = new ArrayList<Integer>();
 			for(int i=0; i<localCores; i++) coreID_pool.add(i);
-			jcl.instantiateGlobalVar("filename_pool", coreID_pool);
-			coreID_pool = (List<Integer>) jcl.getValueLocking("filename_pool").getCorrectResult();
-		}
+			jcl.instantiateGlobalVar("coreID_pool", coreID_pool);
+			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
+		}*/
 
 		int coreID = coreID_pool.remove(0);
-		jcl.setValueUnlocking("filename_pool", coreID_pool);
+		jcl.setValueUnlocking("coreID_pool", coreID_pool);
 
 
 		// map dos metadados
@@ -141,7 +151,7 @@ public class JCL_Index {
 
 		int qtdMesure = mesureMeta.size();
 
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID);
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID).getCorrectResult();
 
 		// map dos indices invertidos
 		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
