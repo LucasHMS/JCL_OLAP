@@ -82,14 +82,15 @@ public class Index {
 			System.out.println("\n");
 		}
 		 */
-		Object [] args = {};
-		List<Entry<String,String>> devices = jcl.getDevices(); System.out.println("n devices: " + devices.size());
+		//Object [] args = {};
+		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		for(Entry<String,String> e : devices) {
 			int n = jcl.getDeviceCore(e);
-			for(int i=0;i<1;i++) {
+			for(int i=0;i<n;i++) {
 				jcl.executeOnDevice(e, "JCL_Index", "teste");
-				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap"));
+				Object [] args = {new Integer(i)};
+				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap", args));
 			}
 				
 		}

@@ -69,8 +69,8 @@ public class Producer
 		
 		jcl.getAllResultBlocking(results);
 		System.out.println("finalizou");
-		jcl.cleanEnvironment();
-		jcl.destroy();
+		//jcl.cleanEnvironment();
+		//jcl.destroy();
 	}
 	
 	public void makeBuffer(String line, int i)

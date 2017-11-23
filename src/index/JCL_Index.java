@@ -122,11 +122,11 @@ public class JCL_Index {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void createIndexFromMap() {
+	public void createIndexFromMap(int coreID) {
 		System.out.println("*****entrou no metodo******");
 		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
 
-		// pool para escolher arquivo que sera lido pelo execute do core
+/*		// pool para escolher arquivo que sera lido pelo execute do core
 		int localCores = Runtime.getRuntime().availableProcessors();
 
 		List<Integer> coreID_pool = new ArrayList<Integer>();
@@ -141,17 +141,10 @@ public class JCL_Index {
 		}
 		
 		System.out.println("*****gerenciou o core pool******");
-		
-	/*	List<Integer> coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
-		if(coreID_pool == null){
-			coreID_pool = new ArrayList<Integer>();
-			for(int i=0; i<localCores; i++) coreID_pool.add(i);
-			jcl.instantiateGlobalVar("coreID_pool", coreID_pool);
-			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
-		}*/
+
 
 		int coreID = coreID_pool.remove(0);
-		jcl.setValueUnlocking("coreID_pool", coreID_pool);
+		jcl.setValueUnlocking("coreID_pool", coreID_pool);*/
 
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
