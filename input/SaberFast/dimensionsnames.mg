@@ -1,0 +1,11 @@
+0=Cod_Record
+1=Diretoria
+2=Colaborador
+3=Cargo
+4=name
+5=Loja
+6=Regional
+7=area
+8=username
+9=disponivel
+10=completo
