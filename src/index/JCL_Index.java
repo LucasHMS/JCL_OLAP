@@ -6,12 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
@@ -41,7 +37,7 @@ public class JCL_Index {
 		jcl.getAllResultBlocking(jcl.executeAllCores("StubLambari", "createIndex", args));
 	}*/
 	// funcao do index
-	public void createIndexFromFile(int fileID) throws IOException
+	public void createIndexFromFile(Integer fileID) throws IOException
 	{
 		System.out.println("criando indice apartir do arquivo " + fileID);
 		// map dos metadados
@@ -110,6 +106,8 @@ public class JCL_Index {
 					mesureIndex.put(splitArr[0], mesureMap);
 				}
 				// Pesquisa pela chave PK, caso exista, adiciona os valores para a map int2double e adiciona ela para a map principal
+				m = m.replace(',', '.');
+
 				mesureIndex.get(splitArr[0]).put(i, Double.parseDouble(m));			
 			}
 		}
@@ -117,10 +115,6 @@ public class JCL_Index {
 		jclMesureIndex.putAll(mesureIndex);
 	}
 
-	public void teste() {
-		System.out.println();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void createIndexFromMap(int coreID) {
 		System.out.println("*****entrou no metodo******");
@@ -148,8 +142,8 @@ public class JCL_Index {
 
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
-		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimesion");
-
+		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
+		
 		int qtdMesure = mesureMeta.size();
 
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID).getCorrectResult();
@@ -169,7 +163,7 @@ public class JCL_Index {
 		for(Entry<Integer, String> e : map_core.entrySet()){
 			int pk = e.getKey();
 			String [] splitArr = e.getValue().split("\\|");
-			int col = qtdMesure;
+			int col = qtdMesure + 1;
 			// rodamos a quantidade de colunas das dimensions
 			for(int i=0;i<dimensionMeta.size();i++) {
 				// pega o conteudo da coluna
@@ -265,8 +259,12 @@ public class JCL_Index {
 			String [] lineArr = line.split("=");
 			dimension.put((lineArr[1]), Integer.parseInt(lineArr[0]));
 		}
+
 		f1.close();
 		f2.close();
 	}
 
+	public void teste() {
+		System.out.println();
+	}
 }

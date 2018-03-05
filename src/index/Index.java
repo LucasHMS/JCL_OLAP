@@ -13,6 +13,7 @@ import interfaces.kernel.JCL_result;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 
+import java.io.File;
 import java.io.IOException;
 
 import util.FileManip;
@@ -23,6 +24,8 @@ public class Index {
 	public Index() {
 		jcl = JCL_FacadeImpl.getInstance();
 		//jcl.register(FileManip.class, "fileManip");
+		/*File f1 = new File("lib/jclindex.jar");
+		File [] f = { f1 };*/
 		System.out.println("registro jcl index: "+jcl.register(JCL_Index.class, "JCL_Index"));
 	}
 
@@ -88,13 +91,25 @@ public class Index {
 		for(Entry<String,String> e : devices) {
 			int n = jcl.getDeviceCore(e);
 			for(int i=0;i<n;i++) {
-				jcl.executeOnDevice(e, "JCL_Index", "teste");
+//				jcl.executeOnDevice(e, "JCL_Index", "teste");
 				Object [] args = {new Integer(i)};
 				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap", args));
 			}
 				
 		}
 		jcl.getAllResultBlocking(tickets);
+		
+/*		for (Future<JCL_result> t : tickets) {
+			try {
+				JCL_result res = t.get();
+				Exception ex = res.getErrorResult();
+				ex.printStackTrace();
+//				t.get().getErrorResult().printStackTrace();
+			} catch (InterruptedException | ExecutionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			};
+		}*/
 		/*Object [] args = {1};
 		try {
 			jcl.execute("JCL_Index", "createIndex", args).get();

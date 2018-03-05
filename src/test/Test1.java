@@ -1,9 +1,13 @@
 package test;
 
 import java.io.IOException;
+import java.util.Map;
 
 import data.distribution.Producer;
+import implementations.collections.JCLHashMap;
 import index.Index;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntCollection;
 
 public class Test1 {
 	public static void main(String [] args){
@@ -11,7 +15,7 @@ public class Test1 {
 		try {
 			int size = 5000;
 			long t1 = System.currentTimeMillis();
-			p.readTupla(size);
+			p.readTupla(size,"input/NorthwindSalesData2.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS) Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
@@ -31,6 +35,17 @@ public class Test1 {
 			e.printStackTrace();
 		}
 		
+		/*System.out.println("Inverted Index");
+		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+0);
+		for(Map.Entry<String, IntCollection> e : jclInvertedIndex.entrySet()) {
+			System.out.println(e.getKey() + ": " + e.getValue());
+		}
+		
+		System.out.println("Mesure Index");
+		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+1); 
+		for(Map.Entry<String, Int2DoubleOpenHashMap> e : jclMesureIndex.entrySet()) {
+			System.out.println(e.getKey() + ": " + e.getValue());
+		}*/
 		
 	}
 }

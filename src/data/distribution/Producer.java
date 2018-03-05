@@ -27,10 +27,10 @@ public class Producer
 	public Producer()
 	{}
 	
-	public void readTupla(int size) throws IOException
+	public void readTupla(int size, String fileName) throws IOException
 	{
 	//  inicio variaveis
-		tuplas = "input/NorthwindSalesData.data";
+		tuplas = fileName;
 		BufferedReader br = new BufferedReader(new FileReader(tuplas));
 		String line = br.readLine();
 		int i = 0;
@@ -108,11 +108,11 @@ public class Producer
 	
 	public void getHosts()
 	{
-		File f1 = new File("lib/Consumer.jar");
+		File f1 = new File("lib/ConsumerF.jar");
 		File f2 = new File("lib/MyEntry.jar");
-		File f3 = new File("lib/CircularArrayList.jar");
+//		File f3 = new File("lib/CircularArrayList.jar");
 		File f4 = new File("lib/filemanip.jar");
-		File [] jars = {f1,f2,f3, f4};
+		File [] jars = {f1,f2, f4};
 		jcl.register(jars, "Consumer");
 		host = jcl.getDevices();
 	}

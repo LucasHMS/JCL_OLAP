@@ -5,13 +5,11 @@ import java.util.List;
 
 import java.util.Map.Entry;
 
-import org.omg.CORBA.OBJ_ADAPTER;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import implementations.sm_kernel.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
-import util.FileManip; 
+//import util.FileManip; 
 
 public class Consumer {
 
@@ -51,7 +49,7 @@ public class Consumer {
 				jcl.setValueUnlocking("core_"+i, m_aux);
 			}
 			
-			//FileManip.writeTuplesTxt(m, i);
+			util.FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
@@ -66,7 +64,7 @@ public class Consumer {
 			m_aux.putAll(m);
 			jcl.setValueUnlocking("core_0", m_aux);
 			
-			//FileManip.writeTuplesTxt(m, 0);
+			util.FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("finalizou para maquina " + machineID);
 	}
