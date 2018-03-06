@@ -8,6 +8,7 @@ import implementations.collections.JCLHashMap;
 import index.Index;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
+import query.QueryDriver;
 
 public class Test1 {
 	public static void main(String [] args){
@@ -31,11 +32,18 @@ public class Test1 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
+			QueryDriver qd = new QueryDriver();
+			qd.readAndParse();
+			t1 = System.currentTimeMillis();
+			qd.filterQuery();
+			t2 = System.currentTimeMillis();
+			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Inverted Index");
+		/*System.out.println("Inverted Index");
 		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+0);
 		for(Map.Entry<String, IntCollection> e : jclInvertedIndex.entrySet()) {
 			System.out.println(e.getKey() + ": " + e.getValue());
@@ -45,7 +53,7 @@ public class Test1 {
 		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+1); 
 		for(Map.Entry<String, Int2DoubleOpenHashMap> e : jclMesureIndex.entrySet()) {
 			System.out.println(e.getKey() + ": " + e.getValue());
-		}
+		}*/
 		
 	}
 }
