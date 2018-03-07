@@ -88,14 +88,15 @@ public class Index {
 		//Object [] args = {};
 		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
+		int j = 0;
 		for(Entry<String,String> e : devices) {
 			int n = jcl.getDeviceCore(e);
 			for(int i=0;i<n;i++) {
 //				jcl.executeOnDevice(e, "JCL_Index", "teste");
-				Object [] args = {new Integer(i)};
+				Object [] args = {new Integer(j), new Integer(i)};
 				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap", args));
 			}
-				
+			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
 		

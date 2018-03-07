@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class JCL_Index {
@@ -116,9 +117,9 @@ public class JCL_Index {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void createIndexFromMap(int coreID) {
+	public void createIndexFromMap(int machineID, int coreID) {
 		System.out.println("*****entrou no metodo******");
-		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
+		JCL_facade jcl = JCL_FacadeImpl.getInstance();
 
 /*		// pool para escolher arquivo que sera lido pelo execute do core
 		int localCores = Runtime.getRuntime().availableProcessors();
@@ -146,17 +147,17 @@ public class JCL_Index {
 		
 		int qtdMesure = mesureMeta.size();
 
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue("core_"+coreID).getCorrectResult();
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
 		System.out.println("tamanho da map do core "+coreID+": "+map_core.size());
 		// map dos indices invertidos
-		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
+		Object2ObjectMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
 		// map do jcl para dar putAll
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
+		//Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
 
 		// map dos mesure index
-		Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
+		Object2ObjectMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
 		// map do jcl para dar putAll
-		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
+		//Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
 		System.out.println("*****iniciou a criação dos maps******");
 
@@ -200,8 +201,12 @@ public class JCL_Index {
 			}
 		}
 		
-		jclInvertedIndex.putAll(invertedIndex);
-		jclMesureIndex.putAll(mesureIndex);
+		//jclInvertedIndex.putAll(invertedIndex);
+		//jclMesureIndex.putAll(mesureIndex);
+		jcl.instantiateGlobalVar(machineID+"_invertedIndex_"+coreID, invertedIndex);
+		jcl.instantiateGlobalVar(machineID+"_mesureIndex_"+coreID, mesureIndex);
+		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_invertedIndex_"+0).getCorrectResult());
+		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_mesureIndex_"+0).getCorrectResult());
 		System.out.println("*****finalizou a criação dos maps******");
 	}
 

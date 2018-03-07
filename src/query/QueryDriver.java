@@ -57,13 +57,15 @@ public class QueryDriver {
 	public void filterQuery() {
 		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
+		int j = 0;
 		for(Entry<String,String> e : devices) {
 			int n = jcl.getDeviceCore(e);
 			for(int i=0;i<n;i++) {
 				Object [] args = {elements.getColumnList(), elements.getOperatorList(),
-									elements.getOpArgList(), elements.getIntraOpFilter(), new Integer(i)};
+									elements.getOpArgList(), elements.getIntraOpFilter(), new Integer(j), new Integer(i)};
 				tickets.add(jcl.executeOnDevice(e,"Filter", "filtra", args));
 			}
+			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
 		try {

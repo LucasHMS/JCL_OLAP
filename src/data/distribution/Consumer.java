@@ -7,13 +7,12 @@ import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import implementations.sm_kernel.JCL_FacadeImpl;
+import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
-//import util.FileManip; 
 
 public class Consumer {
 
-	//@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void save(List<Entry<Integer, String>> buffer, int machineID) throws IOException{
 		System.out.println("maquina: " + machineID);
 		int localCores = Runtime.getRuntime().availableProcessors();
@@ -38,15 +37,15 @@ public class Consumer {
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+i);
 			//hm.putAll(m);
 						
-			Object o = (Object) jcl.getValueLocking("core_"+i).getCorrectResult();
-			if(o.toString().startsWith("No value found!")){
-				//m_aux = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+i).getCorrectResult();
-				jcl.instantiateGlobalVar("core_"+i, 0);
-				jcl.setValueUnlocking("core_"+i, m);
+			Object o = (Object) jcl.getValueLocking(machineID+"_core_"+i).getCorrectResult();
+			if(/*o.toString().startsWith("No value found!")*/o == null){
+				//m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_"+i).getCorrectResult();
+				jcl.instantiateGlobalVar(machineID+"_core_"+i, 0);
+				jcl.setValueUnlocking(machineID+"_core_"+i, m);
 			}else{
 				m_aux = (Int2ObjectMap<String>) o;
 				m_aux.putAll(m);
-				jcl.setValueUnlocking("core_"+i, m_aux);
+				jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
 			}
 			
 			util.FileManip.writeTuplesTxt(m, i);
@@ -60,9 +59,9 @@ public class Consumer {
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			//hm.putAll(m);
 			
-			Int2ObjectMap<String> m_aux = (Int2ObjectMap<String>) jcl.getValueLocking("core_0").getCorrectResult();
+			Int2ObjectMap<String> m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_0").getCorrectResult();
 			m_aux.putAll(m);
-			jcl.setValueUnlocking("core_0", m_aux);
+			jcl.setValueUnlocking(machineID+"_core_0", m_aux);
 			
 			util.FileManip.writeTuplesTxt(m, 0);
 		}

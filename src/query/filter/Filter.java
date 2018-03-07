@@ -24,7 +24,7 @@ public class Filter
      * Mais pra frente tambem receberei os filtros das mesures*/
     @SuppressWarnings("unchecked")
 	public void filtra(List<String> coluna, List<Integer> operatorID, List<String> parameters, 
-						List<Integer> intraOpFilter, int coreID)
+						List<Integer> intraOpFilter, int machineID, int coreID)
 	{   
 		System.out.println("Iniciando Filter. core " + coreID);
     	JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
@@ -33,10 +33,10 @@ public class Filter
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
 
 		// map de tuplas
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue("core_"+coreID).getCorrectResult();
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
 		
 		// map do indice invertido
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
+		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>(machineID+"_invertedIndex_"+coreID);
 		
 		// lista para salvar as maps de resultado de cada filtro da consulta
 		Int2ObjectMap<String> filterResults = new Int2ObjectOpenHashMap<>();
