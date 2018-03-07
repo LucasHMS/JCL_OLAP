@@ -32,28 +32,29 @@ public class Test1 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
+			/*System.out.println("Inverted Index");
+			Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+0);
+			for(Map.Entry<String, IntCollection> e : jclInvertedIndex.entrySet()) {
+				System.out.println(e.getKey() + ": " + e.getValue());
+			}
+			
+			System.out.println("Mesure Index");
+			Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+1); 
+			for(Map.Entry<String, Int2DoubleOpenHashMap> e : jclMesureIndex.entrySet()) {
+				System.out.println(e.getKey() + ": " + e.getValue());
+			}*/
+			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse();
+			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
 			
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		/*System.out.println("Inverted Index");
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+0);
-		for(Map.Entry<String, IntCollection> e : jclInvertedIndex.entrySet()) {
-			System.out.println(e.getKey() + ": " + e.getValue());
-		}
-		
-		System.out.println("Mesure Index");
-		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+1); 
-		for(Map.Entry<String, Int2DoubleOpenHashMap> e : jclMesureIndex.entrySet()) {
-			System.out.println(e.getKey() + ": " + e.getValue());
-		}*/
-		
 	}
 }

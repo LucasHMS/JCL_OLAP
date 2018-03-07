@@ -1,100 +1,101 @@
 PrecoUnitario|Quantidade|Data:ALFA|Pais:ALFA|Cidade:ALFA|Empresa:ALFA|Cliente:ALFA|CEP:ALFA|Categoria:ALFA|Produto:ALFA
-14,00|12|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Queso Cabrales
-9,80|10|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|5|Singaporean Hokkien Fried Mee
-34,80|5|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Mozzarella di Giovanni
-18,60|9|1996-07-05 00:00:00.000|Germany|Münster|Toms Spezialitäten|TOMSP|44087|7|Tofu
-42,40|40|1996-07-05 00:00:00.000|Germany|Münster|Toms Spezialitäten|TOMSP|44087|7|Manjimup Dried Apples
-7,70|10|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|8|Jack's New England Clam Chowder
-42,40|35|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|7|Manjimup Dried Apples
-16,80|15|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|2|Louisiana Fiery Hot Pepper Sauce
-16,80|6|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|5|Gustaf's Knäckebröd
-15,60|15|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|5|Ravioli Angelo
-16,80|20|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|2|Louisiana Fiery Hot Pepper Sauce
-64,80|40|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|3|Sir Rodney's Marmalade
-2,00|25|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|4|Geitost
-27,20|40|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|4|Camembert Pierrot
-10,00|20|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|4|Gorgonzola Telino
-14,40|42|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|1|Chartreuse verte
-16,00|40|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|3|Maxilaku
-3,60|15|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|1|Guaraná Fantástica
-19,20|21|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|6|Pâté chinois
-8,00|21|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|7|Longlife Tofu
-15,20|20|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|1|Chang
-13,90|35|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|3|Pavlova
 15,20|25|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|8|Inlagd Sill
-44,00|30|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|4|Raclette Courdavault
-26,20|15|1996-07-15 00:00:00.000|Brazil|Resende|Wellington Importadora|WELLI|08737-363|6|Perth Pasties
-10,40|12|1996-07-15 00:00:00.000|Brazil|Resende|Wellington Importadora|WELLI|08737-363|2|Original Frankfurter grüne Soße
-35,10|25|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|3|Schoggi Schokolade
-14,40|6|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|1|Chartreuse verte
-10,40|15|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|2|Original Frankfurter grüne Soße
-15,20|50|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|1|Chang
-17,00|65|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|2|Chef Anton's Gumbo Mix
-25,60|6|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|4|Mascarpone Fabioli
-8,00|10|1996-07-18 00:00:00.000|Mexico|Mexico D,F,|Centro comercial Moctezuma|CENTC|05022|3|Sir Rodney's Scones
-20,80|1|1996-07-18 00:00:00.000|Mexico|Mexico D,F,|Centro comercial Moctezuma|CENTC|05022|8|Gravad lax
-7,70|16|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|8|Jack's New England Clam Chowder
-15,60|50|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|5|Ravioli Angelo
-39,40|15|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|3|Tarte au sucre
-12,00|21|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|1|Outback Lager
-8,00|20|1996-07-19 00:00:00.000|Brazil|Rio de Janeiro|Que Delícia|QUEDE|02389-673|3|Sir Rodney's Scones
-14,40|20|1996-07-19 00:00:00.000|Brazil|Rio de Janeiro|Que Delícia|QUEDE|02389-673|1|Steeleye Stout
-17,00|12|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|2|Chef Anton's Gumbo Mix
-24,00|15|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|7|Uncle Bob's Organic Dried Pears
-30,40|2|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|5|Gnocchi di nonna Alice
-13,90|60|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|3|Pavlova
-3,60|28|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|1|Guaraná Fantástica
-20,70|60|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|8|Nord-Ost Matjeshering
-8,00|36|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|7|Longlife Tofu
-15,20|35|1996-07-24 00:00:00.000|Sweden|Bräcke|Folk och fä HB|FOLKO|S-844 67|1|Chang
-7,70|25|1996-07-24 00:00:00.000|Sweden|Bräcke|Folk och fä HB|FOLKO|S-844 67|8|Jack's New England Clam Chowder
-31,20|30|1996-07-25 00:00:00.000|France|Strasbourg|Blondesddsl père et fils|BLONP|67000|6|Alice Mutton
-12,00|20|1996-07-25 00:00:00.000|France|Strasbourg|Blondesddsl père et fils|BLONP|67000|1|Outback Lager
-30,40|12|1996-07-26 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|4|Queso Manchego La Pastora
-14,70|50|1996-07-29 00:00:00.000|Germany|München|Frankenversand|FRANK|80805|8|Boston Crab Meat
 44,00|70|1996-07-29 00:00:00.000|Germany|München|Frankenversand|FRANK|80805|4|Raclette Courdavault
-14,40|15|1996-07-29 00:00:00.000|Germany|München|Frankenversand|FRANK|80805|1|Lakkalikööri
-99,00|10|1996-07-30 00:00:00.000|Venezuela|Caracas|GROSELLA-Restaurante|GROSR|1081|6|Thüringer Rostbratwurst
-27,80|4|1996-07-30 00:00:00.000|Venezuela|Caracas|GROSELLA-Restaurante|GROSR|1081|4|Mozzarella di Giovanni
-2,00|60|1996-07-31 00:00:00.000|USA|Seattle|White Clover Markets|WHITC|98128|4|Geitost
-27,80|20|1996-07-31 00:00:00.000|USA|Seattle|White Clover Markets|WHITC|98128|4|Mozzarella di Giovanni
-15,20|30|1996-08-01 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|8|Inlagd Sill
-36,80|25|1996-08-01 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|1|Ipoh Coffee
-2,00|24|1996-08-01 00:00:00.000|USA|Lander|Split Rail Beer & Ale|SPLIR|82520|4|Geitost
-64,80|6|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|3|Sir Rodney's Marmalade
-10,00|40|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|4|Gorgonzola Telino
-27,80|24|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|4|Mozzarella di Giovanni
-24,80|24|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|8|Ikura
+19,20|21|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|6|Pâté chinois
+30,40|2|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|5|Gnocchi di nonna Alice
 10,00|15|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|4|Gorgonzola Telino
-2,00|20|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|4|Geitost
-14,70|60|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|8|Boston Crab Meat
-14,40|33|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|1|Lakkalikööri
-17,20|20|1996-08-06 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Flotemysost
-27,80|7|1996-08-06 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Mozzarella di Giovanni
-3,60|12|1996-08-07 00:00:00.000|Italy|Bergamo|Magazzini Alimentari Riuniti|MAGAA|24100|1|Guaraná Fantástica
-44,00|6|1996-08-07 00:00:00.000|Italy|Bergamo|Magazzini Alimentari Riuniti|MAGAA|24100|4|Raclette Courdavault
-24,80|15|1996-08-08 00:00:00.000|Mexico|Mexico D,F,|Tortuga Restaurante|TORTU|05033|8|Ikura
-4,80|10|1996-08-08 00:00:00.000|Mexico|Mexico D,F,|Tortuga Restaurante|TORTU|05033|8|Konbu
 36,40|20|1996-08-09 00:00:00.000|Germany|Leipzig|Morgenstern Gesundkost|MORGK|04179|7|Rössle Sauerkraut
-39,40|12|1996-08-09 00:00:00.000|Germany|Leipzig|Morgenstern Gesundkost|MORGK|04179|3|Tarte au sucre
-15,50|16|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|2|Gula Malacca
-44,00|15|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|4|Raclette Courdavault
-35,10|8|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|2|Vegie-spread
+14,40|42|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|1|Chartreuse verte
+8,00|36|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|7|Longlife Tofu
+7,70|25|1996-07-24 00:00:00.000|Sweden|Bräcke|Folk och fä HB|FOLKO|S-844 67|8|Jack's New England Clam Chowder
+7,70|16|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|8|Jack's New England Clam Chowder
+42,40|35|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|7|Manjimup Dried Apples
 12,00|25|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|8|Röd Kaviar
-31,20|15|1996-08-13 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|6|Alice Mutton
-3,60|12|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|1|Guaraná Fantástica
-19,20|20|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|6|Pâté chinois
-6,20|30|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|1|Rhönbräu Klosterbier
-7,30|1|1996-08-14 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|3|Teatime Chocolate Biscuits
+39,40|12|1996-08-09 00:00:00.000|Germany|Leipzig|Morgenstern Gesundkost|MORGK|04179|3|Tarte au sucre
+2,00|60|1996-07-31 00:00:00.000|USA|Seattle|White Clover Markets|WHITC|98128|4|Geitost
+36,80|25|1996-08-01 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|1|Ipoh Coffee
+4,80|10|1996-08-08 00:00:00.000|Mexico|Mexico D,F,|Tortuga Restaurante|TORTU|05033|8|Konbu
+35,10|25|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|3|Schoggi Schokolade
+14,40|15|1996-07-29 00:00:00.000|Germany|München|Frankenversand|FRANK|80805|1|Lakkalikööri
 3,60|6|1996-08-14 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|1|Guaraná Fantástica
-14,40|4|1996-08-14 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|1|Steeleye Stout
-20,70|6|1996-08-15 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|8|Nord-Ost Matjeshering
-15,60|2|1996-08-15 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|5|Ravioli Angelo
-12,40|20|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|2|Genen Shouyu
-7,30|18|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|3|Teatime Chocolate Biscuits
-27,20|35|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|4|Camembert Pierrot
+8,00|10|1996-07-18 00:00:00.000|Mexico|Mexico D,F,|Centro comercial Moctezuma|CENTC|05022|3|Sir Rodney's Scones
+17,00|12|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|2|Chef Anton's Gumbo Mix
+14,40|33|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|1|Lakkalikööri
+15,60|15|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|5|Ravioli Angelo
 27,80|3|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|4|Mozzarella di Giovanni
-35,10|15|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|3|Schoggi Schokolade
-15,50|21|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|2|Gula Malacca
-27,20|20|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|4|Camembert Pierrot
 11,20|5|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|1|Laughing Lumberjack Lager
+99,00|10|1996-07-30 00:00:00.000|Venezuela|Caracas|GROSELLA-Restaurante|GROSR|1081|6|Thüringer Rostbratwurst
+26,20|15|1996-07-15 00:00:00.000|Brazil|Resende|Wellington Importadora|WELLI|08737-363|6|Perth Pasties
+27,80|20|1996-07-31 00:00:00.000|USA|Seattle|White Clover Markets|WHITC|98128|4|Mozzarella di Giovanni
+20,70|6|1996-08-15 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|8|Nord-Ost Matjeshering
+2,00|24|1996-08-01 00:00:00.000|USA|Lander|Split Rail Beer & Ale|SPLIR|82520|4|Geitost
+31,20|30|1996-07-25 00:00:00.000|France|Strasbourg|Blondesddsl père et fils|BLONP|67000|6|Alice Mutton
+12,40|20|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|2|Genen Shouyu
+14,00|12|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Queso Cabrales
+14,40|4|1996-08-14 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|1|Steeleye Stout
+8,00|21|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|7|Longlife Tofu
+12,00|21|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|1|Outback Lager
+9,80|10|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|5|Singaporean Hokkien Fried Mee
+16,80|20|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|2|Louisiana Fiery Hot Pepper Sauce
+7,30|1|1996-08-14 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|3|Teatime Chocolate Biscuits
+13,90|60|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|3|Pavlova
+64,80|40|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|3|Sir Rodney's Marmalade
+20,80|1|1996-07-18 00:00:00.000|Mexico|Mexico D,F,|Centro comercial Moctezuma|CENTC|05022|8|Gravad lax
+15,60|50|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|5|Ravioli Angelo
+3,60|15|1996-07-11 00:00:00.000|Switzerland|Bern|Chop-suey Chinese|CHOPS|3012|1|Guaraná Fantástica
+17,20|20|1996-08-06 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Flotemysost
+6,20|30|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|1|Rhönbräu Klosterbier
+3,60|12|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|1|Guaraná Fantástica
+25,60|6|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|4|Mascarpone Fabioli
+14,70|50|1996-07-29 00:00:00.000|Germany|München|Frankenversand|FRANK|80805|8|Boston Crab Meat
+39,40|15|1996-07-19 00:00:00.000|Germany|Köln|Ottilies Käseladen|OTTIK|50739|3|Tarte au sucre
+8,00|20|1996-07-19 00:00:00.000|Brazil|Rio de Janeiro|Que Delícia|QUEDE|02389-673|3|Sir Rodney's Scones
+16,00|40|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|3|Maxilaku
+14,70|60|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|8|Boston Crab Meat
+27,80|4|1996-07-30 00:00:00.000|Venezuela|Caracas|GROSELLA-Restaurante|GROSR|1081|4|Mozzarella di Giovanni
+24,80|24|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|8|Ikura
+35,10|8|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|2|Vegie-spread
+18,60|9|1996-07-05 00:00:00.000|Germany|Münster|Toms Spezialitäten|TOMSP|44087|7|Tofu
+17,00|65|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|2|Chef Anton's Gumbo Mix
+44,00|30|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|4|Raclette Courdavault
+35,10|15|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|3|Schoggi Schokolade
+34,80|5|1996-07-04 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Mozzarella di Giovanni
+12,00|20|1996-07-25 00:00:00.000|France|Strasbourg|Blondesddsl père et fils|BLONP|67000|1|Outback Lager
+15,50|16|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|2|Gula Malacca
+44,00|6|1996-08-07 00:00:00.000|Italy|Bergamo|Magazzini Alimentari Riuniti|MAGAA|24100|4|Raclette Courdavault
+27,80|24|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|4|Mozzarella di Giovanni
+2,00|20|1996-08-05 00:00:00.000|Germany|Cunewalde|QUICK-Stop|QUICK|01307|4|Geitost
+13,90|35|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|3|Pavlova
+11,20|5|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|1|Laughing Lumberjack Lager
+15,20|20|1996-07-12 00:00:00.000|Switzerland|Genève|Richter Supermarkt|RICSU|1203|1|Chang
+14,40|6|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|1|Chartreuse verte
+7,70|10|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|8|Jack's New England Clam Chowder
+19,20|20|1996-08-14 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|6|Pâté chinois
+15,50|21|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|2|Gula Malacca
+64,80|6|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|3|Sir Rodney's Marmalade
+30,40|12|1996-07-26 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|4|Queso Manchego La Pastora
+15,60|2|1996-08-15 00:00:00.000|Spain|Madrid|Romero y tomillo|ROMEY|28001|5|Ravioli Angelo
+15,20|35|1996-07-24 00:00:00.000|Sweden|Bräcke|Folk och fä HB|FOLKO|S-844 67|1|Chang
+20,70|60|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|8|Nord-Ost Matjeshering
+3,60|12|1996-08-07 00:00:00.000|Italy|Bergamo|Magazzini Alimentari Riuniti|MAGAA|24100|1|Guaraná Fantástica
+3,60|28|1996-07-23 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|1|Guaraná Fantástica
+27,80|7|1996-08-06 00:00:00.000|France|Reims|Vins et alcools Chevalier|VINET|51100|4|Mozzarella di Giovanni
+10,40|15|1996-07-16 00:00:00.000|Venezuela|San Cristóbal|HILARION-Abastos|HILAA|5022|2|Original Frankfurter grüne Soße
+24,80|15|1996-08-08 00:00:00.000|Mexico|Mexico D,F,|Tortuga Restaurante|TORTU|05033|8|Ikura
+16,80|15|1996-07-08 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|2|Louisiana Fiery Hot Pepper Sauce
+10,00|20|1996-07-10 00:00:00.000|Brazil|Rio de Janeiro|Hanari Carnes|HANAR|05454-876|4|Gorgonzola Telino
+7,30|18|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|3|Teatime Chocolate Biscuits
+10,40|12|1996-07-15 00:00:00.000|Brazil|Resende|Wellington Importadora|WELLI|08737-363|2|Original Frankfurter grüne Soße
+31,20|15|1996-08-13 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|6|Alice Mutton
+15,20|30|1996-08-01 00:00:00.000|Finland|Oulu|Wartian Herkku|WARTH|90110|8|Inlagd Sill
+27,20|20|1996-08-19 00:00:00.000|Germany|Frankfurt a,M,|Lehmanns Marktstand|LEHMS|60528|4|Camembert Pierrot
+10,00|40|1996-08-02 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|4|Gorgonzola Telino
+27,20|40|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|4|Camembert Pierrot
+24,00|15|1996-07-22 00:00:00.000|USA|Albuquerque|Rattlesnake Canyon Grocery|RATTC|87110|7|Uncle Bob's Organic Dried Pears
+27,20|35|1996-08-16 00:00:00.000|Venezuela|Barquisimeto|LILA-Supermercado|LILAS|3508|4|Camembert Pierrot
+44,00|15|1996-08-12 00:00:00.000|Sweden|Luleå|Berglunds snabbköp|BERGS|S-958 22|4|Raclette Courdavault
+16,80|6|1996-07-08 00:00:00.000|France|Lyon|Victuailles en stock|VICTE|69004|5|Gustaf's Knäckebröd
+42,40|40|1996-07-05 00:00:00.000|Germany|Münster|Toms Spezialitäten|TOMSP|44087|7|Manjimup Dried Apples
+14,40|20|1996-07-19 00:00:00.000|Brazil|Rio de Janeiro|Que Delícia|QUEDE|02389-673|1|Steeleye Stout
+15,20|50|1996-07-17 00:00:00.000|Austria|Graz|Ernst Handel|ERNSH|8010|1|Chang
+2,00|25|1996-07-09 00:00:00.000|Belgium|Charleroi|Suprêmes délices|SUPRD|B-6000|4|Geitost

@@ -14,17 +14,6 @@ import query.filter.operators.*;
 
 public class Filter
 {
-	/*
-	 * 1 = starts with
-     * 2 = ends with
-     * 3 = >
-     * 4 = <
-	 * 5 = =
-	
-	 * 1 = and
-	 * 2 = or
-	 */
-    
     /* Recebe 3 lists, a primeira com os nomes das colunas, a segunda com o tipo de filtro e a terceira com
      * os parametros do filtro. A minha classe irá ver se essas informações estão na hash do jcl.
      * Depois de achar a peirmeira coluna eu aplico o filtro, após a aplicacao do primeiro filtro eu irei
@@ -36,13 +25,15 @@ public class Filter
     @SuppressWarnings("unchecked")
 	public void filtra(List<String> coluna, List<Integer> operatorID, List<String> parameters, 
 						List<Integer> intraOpFilter, int coreID)
-	{   	
+	{   
+		System.out.println("Iniciando Filter. core " + coreID);
     	JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
     	// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
+
 		// map de tuplas
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID).getCorrectResult();
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue("core_"+coreID).getCorrectResult();
 		
 		// map do indice invertido
 		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
@@ -50,7 +41,7 @@ public class Filter
 		// lista para salvar as maps de resultado de cada filtro da consulta
 		Int2ObjectMap<String> filterResults = new Int2ObjectOpenHashMap<>();
 		
-		// pega a posicao da coluna
+		// Filtragem inicial
 		int posicao = dimensionMeta.get(coluna.get(0));
 		// pega a posicao que esta coluna esta na minha map de tuplas
 		int posicao_real = mesureMeta.size()+1+posicao;
@@ -84,29 +75,36 @@ public class Filter
 			// percorre map com as tuplas do resultado parcial
 			for(Entry<Integer, String> e : filterResults.entrySet()){
 				// caso a tupla já tenha sido adicionada ao resultado, nao é preciso continuar
-				if(aux.containsKey(e.getKey()))
-					continue;
-				
 				String [] splitArr = e.getValue().split("\\|");
 				// verifica apenas os values da coluna que foi passada
 				String d = splitArr[posicao_real];
 				// verifica se o valor da coluna nessa tupla passa pelo filtro
 				boolean x = filtOp.op(d, parameters.get(i)); 
 				if(x == true){	
-					// caso passe pelo filtro, adiciona todas as tuplas com esse valor a map de resultado
-					IntCollection allIds = jclInvertedIndex.get(d);
-					for(int id : allIds) {
-						aux.put(id, map_core.get(id));
-					}
+					// caso passe pelo filtro, adiciona a tupla para a map de resultado
+					aux.put(e.getKey(), e.getValue());
 				}
 			}
 			filterResults.clear();
 			filterResults = null;
 			filterResults = new Int2ObjectOpenHashMap<>(aux);
 		}
-		jcl.instantiateGlobalVar("filter_core_"+coreID, filterResults.get(0));
+		//jcl.instantiateGlobalVar("filter_core_"+coreID, new Int2ObjectOpenHashMap<>(filterResults));
+		JCLHashMap<Integer, String> m = new JCLHashMap<>("filter_core_"+coreID);
+		m.putAll(filterResults);
+		System.out.println("Finalizou a Filtragem. core " + coreID);
     }
-       
+    
+	/*
+	 * 1 = starts with
+     * 2 = ends with
+     * 3 = >
+     * 4 = <
+	 * 5 = =
+	
+	 * 1 = and
+	 * 2 = or
+	 */
     public FilterOperator checkOperator(int opID) {
     	switch (opID) {
 		case 1:
@@ -114,9 +112,9 @@ public class Filter
 		case 2:
 			return new EndsWithOp();
 		case 3:
-			return new LessThanOp();
-		case 4:
 			return new GreaterThanOp();
+		case 4:
+			return new LessThanOp();
 		case 5:
 			return new EqualsToOp();
 		

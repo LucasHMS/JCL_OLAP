@@ -146,7 +146,7 @@ public class JCL_Index {
 		
 		int qtdMesure = mesureMeta.size();
 
-		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValueLocking("core_"+coreID).getCorrectResult();
+		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue("core_"+coreID).getCorrectResult();
 		System.out.println("tamanho da map do core "+coreID+": "+map_core.size());
 		// map dos indices invertidos
 		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();

@@ -33,10 +33,17 @@ public class Interpreter {
 			if (i < queryText.length())
 				i = parseOpIntraFilter(i);
 		}
-		/*System.out.println("colum list: " + elements.getColumnList());
-		System.out.println("op list: " + elements.getOperatorList());
-		System.out.println("arg list: " + elements.getOpArgList());
-		System.out.println("intra op list: " + elements.getIntraOpFilter());*/
+	}
+	
+	public void parseQuery(String queryText) throws Exception {
+		this.queryText = queryText;
+		for(int i=0; i<queryText.length();i++){
+			i = parseColumn(i);
+			i = parseOperator(i);
+			i = parseArg(i);
+			if (i < queryText.length())
+				i = parseOpIntraFilter(i);
+		}
 	}
 	
 	private int parseColumn(int pos) throws Exception {
