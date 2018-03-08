@@ -47,7 +47,7 @@ public class Index {
 		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
 	}
 
-	public void createIndex(){
+	public void createIndex(String origin){
 		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		int j = 0;
@@ -55,7 +55,7 @@ public class Index {
 			int n = jcl.getDeviceCore(e);
 			for(int i=0;i<n;i++) {
 				Object [] args = {new Integer(j), new Integer(i)};
-				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFromMap", args));
+				tickets.add(jcl.executeOnDevice(e,"JCL_Index", "createIndexFrom"+origin, args));
 			}
 			j++;
 		}

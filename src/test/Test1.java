@@ -24,7 +24,7 @@ public class Test1 {
 			System.out.println("(CARREGAR METADADOS)" + ((t2-t1)*1.0/1000) + "s");
 			
 			t1 = System.currentTimeMillis();
-			i.createIndex();
+			i.createIndex("File");
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			

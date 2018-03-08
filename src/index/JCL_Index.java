@@ -22,12 +22,13 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public class JCL_Index {
 
 	// funcao do index
-	public void createIndexFromFile(Integer fileID) throws IOException
+	public void createIndexFromFile(int machineID, int coreID) throws IOException
 	{
-		System.out.println("criando indice apartir do arquivo " + fileID);
+		System.out.println("***** criando indices apartir de arquivos ******");
+		JCL_facade jcl = JCL_FacadeImpl.getInstance();
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
-		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimesion");
+		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
 
 		int qtdMesure = mesureMeta.size();
 
@@ -35,7 +36,7 @@ public class JCL_Index {
 		FileReader f = null;
 		try
 		{
-			f = new FileReader("arq_"+fileID+".txt");
+			f = new FileReader("arq_"+coreID+".txt");
 		}
 		catch(FileNotFoundException e)
 		{
@@ -43,17 +44,18 @@ public class JCL_Index {
 		}
 
 		// map dos indices invertidos
-		Object2ObjectOpenHashMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
+		Object2ObjectMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
 		// map do jcl para dar putAll
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+fileID);
+		//Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
 
 		// map dos mesure index
-		Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
+		Object2ObjectMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
 		// map do jcl para dar putAll
-		Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+fileID); 
+		//Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
+
+		System.out.println("***** iniciou a criação dos indices ******");
 
 		BufferedReader reader = new BufferedReader(f);
-		reader.readLine();
 		// le linha a linha do arquivo
 		while((line = reader.readLine()) != null)
 		{
@@ -66,6 +68,7 @@ public class JCL_Index {
 			for(int i=0;i<dimensionMeta.size();i++) {
 				// pega o conteudo da coluna
 				String d = splitArr[col++];
+				int pk = Integer.parseInt(splitArr[0]);
 				// verifica se este conteudo ja existe na minha map(no caso, o conteudo e' a chave da map)
 				if(invertedIndex.get(d) == null) {
 					// cria uma lista que guarda as PK onde houve a ocorrencia de d(chave da map)
@@ -74,7 +77,7 @@ public class JCL_Index {
 					invertedIndex.put(d, dimensionList);
 				}
 				// pesquisa pela chave d, caso exista, adiciono mais um PK a lista
-				invertedIndex.get(d).add(Integer.parseInt(splitArr[0]));
+				invertedIndex.get(d).add(pk);
 			}
 
 			// rodamos a quantidade de colunas da mesure
@@ -91,18 +94,24 @@ public class JCL_Index {
 					mesureIndex.put(splitArr[0], mesureMap);
 				}
 				// Pesquisa pela chave PK, caso exista, adiciona os valores para a map int2double e adiciona ela para a map principal
+				Int2DoubleOpenHashMap aux = mesureIndex.get(splitArr[0]);
 				m = m.replace(',', '.');
-
-				mesureIndex.get(splitArr[0]).put(i, Double.parseDouble(m));			
+				aux.put(i, Double.parseDouble(m));
+				mesureIndex.put(splitArr[0],aux);
 			}
 		}
-		jclInvertedIndex.putAll(invertedIndex);
-		jclMesureIndex.putAll(mesureIndex);
+		//jclInvertedIndex.putAll(invertedIndex);
+		//jclMesureIndex.putAll(mesureIndex);
+		jcl.instantiateGlobalVar(machineID+"_invertedIndex_"+coreID, invertedIndex);
+		jcl.instantiateGlobalVar(machineID+"_mesureIndex_"+coreID, mesureIndex);
+		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_invertedIndex_"+0).getCorrectResult());
+		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_mesureIndex_"+0).getCorrectResult());
+		System.out.println("***** finalizou a criação dos indices ******");
 	}
 
 	@SuppressWarnings("unchecked")
 	public void createIndexFromMap(int machineID, int coreID) {
-		System.out.println("*****entrou no metodo******");
+		System.out.println("***** criando indices apartir de maps ******");
 		JCL_facade jcl = JCL_FacadeImpl.getInstance();
 
 		// map dos metadados
@@ -123,7 +132,7 @@ public class JCL_Index {
 		// map do jcl para dar putAll
 		//Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
-		System.out.println("*****iniciou a criação dos maps******");
+		System.out.println("***** iniciou a criação dos indices ******");
 
 		for(Entry<Integer, String> e : map_core.entrySet()){
 			int pk = e.getKey();
@@ -146,7 +155,6 @@ public class JCL_Index {
 			// rodamos a quantidade de colunas da mesure
 			for(int i = 1; i <= qtdMesure; i++)
 			{
-				
 				// pega o conteudo da coluna
 				String m = splitArr[i];	
 				// verifica se a map de mesures possui a chave (que nesse caso e' nossa PK)
@@ -171,7 +179,7 @@ public class JCL_Index {
 		jcl.instantiateGlobalVar(machineID+"_mesureIndex_"+coreID, mesureIndex);
 		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_invertedIndex_"+0).getCorrectResult());
 		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_mesureIndex_"+0).getCorrectResult());
-		System.out.println("*****finalizou a criação dos maps******");
+		System.out.println("***** finalizou a criação dos indices ******");
 	}
 
 	//Escreve os metadados em todas as maquinas do cluster
