@@ -25,7 +25,23 @@ public class Producer
 	private List<Future<JCL_result>> results = new ArrayList<>();
 	
 	public Producer()
-	{}
+	{	
+		File f1 = new File("lib/consumer.jar");
+		File f2 = new File("lib/myentry.jar");
+		File f4 = new File("lib/filemanip.jar");
+		File [] jars = {f1,f2, f4};
+		jcl.register(jars, "Consumer");
+
+		host = jcl.getDevices();
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
+		int j = 0;
+		for(Entry<String,String> e : host) {
+				Object [] args = {new Integer(j)};
+				tickets.add(jcl.executeOnDevice(e,"Consumer", "instanciateCoreMaps", args));
+			j++;
+		}
+		jcl.getAllResultBlocking(tickets);
+	}
 	
 	public void readTupla(int size, String fileName) throws IOException
 	{
@@ -35,8 +51,6 @@ public class Producer
 		String line = br.readLine();
 		int i = 0;
 		int k = 0;
-	//  Passo-1: lista circular
-		getHosts();
 		
 		//  recebe tupla do arquivo
 		while((line = br.readLine()) != null)
@@ -104,15 +118,4 @@ public class Producer
 		System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}
-	
-	public void getHosts()
-	{
-		File f1 = new File("lib/consumer.jar");
-		File f2 = new File("lib/MyEntry.jar");
-		File f4 = new File("lib/filemanip.jar");
-		File [] jars = {f1,f2, f4};
-		jcl.register(jars, "Consumer");
-		host = jcl.getDevices();
-	}
-	
 }
