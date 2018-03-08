@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
-import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class QueryDriver {
 	JCL_facade jcl = JCL_FacadeImpl.getInstance();
@@ -74,18 +72,8 @@ public class QueryDriver {
 			e1.printStackTrace();
 		}
 		
-/*		for(int i=0;i<4;i++) {
-			try {
-				@SuppressWarnings("unchecked")
-//				Int2ObjectMap<String> filterResults =  (Int2ObjectMap<String>) jcl.getValueLocking("filter_core_"+i).getCorrectResult();
-				JCLHashMap<Integer,String> filterResults = new JCLHashMap<>("filter_core_"+i);
-//				System.out.println("Tamanho core " + i + " = " + filterResults.size());
-				System.out.println();
-				for(Entry<Integer, String> e : filterResults.entrySet())
-					System.out.println(e.getKey() + " : " + e.getValue());
-			}catch(Exception e) {
-				continue;
-			}
-		}*/
+		for(int x=0;x<4;x++) 
+			System.out.println("CORE " + x +jcl.getValue(0+"_filter_core_"+x).getCorrectResult());
+		
 	}
 }

@@ -21,22 +21,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class JCL_Index {
 
-	/*	public void stubLambari(){
-		JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
-
-		int localCores = Runtime.getRuntime().availableProcessors();
-		Object [][] args = new Object[localCores][1];
-		for(int i=0; i<localCores; i++){
-			Object [] a = {i};
-			args[i][0] = a;
-		}
-		jcl.get
-		System.out.println("chegou stub");
-
-		//System.out.println(jcl.register(StubLambari.class, "StubLambari"));
-
-		jcl.getAllResultBlocking(jcl.executeAllCores("StubLambari", "createIndex", args));
-	}*/
 	// funcao do index
 	public void createIndexFromFile(Integer fileID) throws IOException
 	{
@@ -120,26 +104,6 @@ public class JCL_Index {
 	public void createIndexFromMap(int machineID, int coreID) {
 		System.out.println("*****entrou no metodo******");
 		JCL_facade jcl = JCL_FacadeImpl.getInstance();
-
-/*		// pool para escolher arquivo que sera lido pelo execute do core
-		int localCores = Runtime.getRuntime().availableProcessors();
-
-		List<Integer> coreID_pool = new ArrayList<Integer>();
-		Object o = (Object) jcl.getValueLocking("coreID_pool").getCorrectResult();
-		if(o.toString().startsWith("No value found!")){
-			coreID_pool = new ArrayList<Integer>();
-			for(int i=0; i<localCores; i++) coreID_pool.add(i);
-			jcl.instantiateGlobalVar("coreID_pool", coreID_pool);
-			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
-		}else{
-			coreID_pool = (List<Integer>) jcl.getValueLocking("coreID_pool").getCorrectResult();
-		}
-		
-		System.out.println("*****gerenciou o core pool******");
-
-
-		int coreID = coreID_pool.remove(0);
-		jcl.setValueUnlocking("coreID_pool", coreID_pool);*/
 
 		// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");

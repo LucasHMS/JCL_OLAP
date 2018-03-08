@@ -89,9 +89,9 @@ public class Filter
 			filterResults = null;
 			filterResults = new Int2ObjectOpenHashMap<>(aux);
 		}
-		//jcl.instantiateGlobalVar("filter_core_"+coreID, new Int2ObjectOpenHashMap<>(filterResults));
-		JCLHashMap<Integer, String> m = new JCLHashMap<>("filter_core_"+coreID);
-		m.putAll(filterResults);
+		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, new Int2ObjectOpenHashMap<>(filterResults));
+		//JCLHashMap<Integer, String> m = new JCLHashMap<>("filter_core_"+coreID);
+		//m.putAll(filterResults);
 		System.out.println("Finalizou a Filtragem. core " + coreID);
     }
     

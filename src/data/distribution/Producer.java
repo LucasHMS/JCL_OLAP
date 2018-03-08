@@ -69,8 +69,7 @@ public class Producer
 		
 		jcl.getAllResultBlocking(results);
 		System.out.println("finalizou");
-		//jcl.cleanEnvironment();
-		//jcl.destroy();
+		br.close();
 	}
 	
 	public void makeBuffer(String line, int i)
@@ -108,9 +107,8 @@ public class Producer
 	
 	public void getHosts()
 	{
-		File f1 = new File("lib/ConsumerF.jar");
+		File f1 = new File("lib/consumer.jar");
 		File f2 = new File("lib/MyEntry.jar");
-//		File f3 = new File("lib/CircularArrayList.jar");
 		File f4 = new File("lib/filemanip.jar");
 		File [] jars = {f1,f2, f4};
 		jcl.register(jars, "Consumer");
