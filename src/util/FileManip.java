@@ -22,7 +22,7 @@ public class FileManip {
 
 	public static void writeTuplesTxt(Map<Integer, String> tuples, int core_num) throws IOException {
 		File f = new File("arq_"+core_num+".txt");
-		FileWriter fw = new FileWriter(f,false);
+		FileWriter fw = new FileWriter(f,true);
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		for(Entry<Integer,String> e : tuples.entrySet()) {
