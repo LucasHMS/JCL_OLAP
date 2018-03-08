@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class QueryDriver {
 	JCL_facade jcl = JCL_FacadeImpl.getInstance();
@@ -52,6 +53,7 @@ public class QueryDriver {
 		System.out.println("intra op list: " + elements.getIntraOpFilter());*/
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void filterQuery() {
 		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
@@ -66,9 +68,18 @@ public class QueryDriver {
 			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
-			
-		for(int x=0;x<4;x++) 
-			System.out.println("CORE " + x +jcl.getValue(0+"_filter_core_"+x).getCorrectResult());
 		
+		j = 0;
+		for(Entry<String,String> e : devices) {
+			int n = jcl.getDeviceCore(e);
+			for(int i=0;i<n;i++) {
+//				System.out.println("M="+j + " - C= " + i);
+				Int2ObjectMap<String> filterResults = (Int2ObjectMap<String>) jcl.getValue(j+"_filter_core_"+i).getCorrectResult();
+				for(Entry<Integer, String> e1 : filterResults.entrySet()) {
+					System.out.println(e1.getValue());
+				}
+			}
+			j++;
+		}
 	}
 }

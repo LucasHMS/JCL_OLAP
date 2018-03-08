@@ -10,26 +10,25 @@ public class Test1 {
 	public static void main(String [] args){
 		Producer p = new Producer();
 		try {
-			int size = 5000;
+			int size = 1000;
 			long t1 = System.currentTimeMillis();
-			p.readTupla(size,"input/NorthwindSalesData1.data");
+			p.readTupla(size,"input/NorthwindSalesData.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS) Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
 			Index i = new Index();
-			
 			t1 = System.currentTimeMillis();
 			i.loadMetadata();
 			t2 = System.currentTimeMillis();
 			System.out.println("(CARREGAR METADADOS)" + ((t2-t1)*1.0/1000) + "s");
 			
 			t1 = System.currentTimeMillis();
-			i.createIndex("File");
+			i.createIndex("Map");
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"");
+			qd.readAndParse("Pais startsWith \"U\" and Produto endsWith \"s\"");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
