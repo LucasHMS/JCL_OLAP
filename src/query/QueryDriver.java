@@ -66,12 +66,7 @@ public class QueryDriver {
 			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		
+			
 		for(int x=0;x<4;x++) 
 			System.out.println("CORE " + x +jcl.getValue(0+"_filter_core_"+x).getCorrectResult());
 		

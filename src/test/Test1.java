@@ -28,17 +28,20 @@ public class Test1 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
-			/*QueryDriver qd = new QueryDriver();
+			QueryDriver qd = new QueryDriver();
 			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
-			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");*/
-			
-			
-			
+			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 }
+
+/*
+ * exemplo de consulta restritiva:
+ * 	Categoria > "5" and Pais startsWith "B" and Produto endsWith "s" and Cidade startsWith "Rio"
+ * 
+ * */

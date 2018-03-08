@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import implementations.collections.JCLHashMap;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import query.filter.operators.*;
 
 public class Filter
@@ -27,7 +27,7 @@ public class Filter
 						List<Integer> intraOpFilter, int machineID, int coreID)
 	{   
 		System.out.println("Iniciando Filter. core " + coreID);
-    	JCL_facade jcl = JCL_FacadeImpl.getInstanceLambari();
+    	JCL_facade jcl = JCL_FacadeImpl.getInstance();
     	// map dos metadados
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
@@ -36,7 +36,7 @@ public class Filter
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
 		
 		// map do indice invertido
-		Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>(machineID+"_invertedIndex_"+coreID);
+		Object2ObjectMap<String, IntCollection> jclInvertedIndex =  (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_invertedIndex_"+coreID).getCorrectResult();
 		
 		// lista para salvar as maps de resultado de cada filtro da consulta
 		Int2ObjectMap<String> filterResults = new Int2ObjectOpenHashMap<>();
