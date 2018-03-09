@@ -40,7 +40,7 @@ public class Filter
     	List<String> columns = query.getColumnList(); 
     	List<Integer> operators = query.getOperatorList();
     	List<String> args = query.getOpArgList(); 
-		List<Integer> intraOps = query.getIntraOpFilter();
+//		List<Integer> intraOps = query.getIntraOpFilter();
 		System.out.println("Iniciando Filter. core " + coreID);
 
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
