@@ -18,7 +18,8 @@ public class QueryDriver {
 	public QueryDriver() {
 		File f1 = new File("lib/filter.jar");
 		File f2 = new File("lib/filteroperators.jar");
-		File [] jars = { f1, f2 };
+		File f3 = new File("lib/queryelements.jar");
+		File [] jars = { f1, f2, f3 };
 		System.out.println("registro Filter: " + jcl.register(jars, "Filter"));
 	}
 	
@@ -61,8 +62,7 @@ public class QueryDriver {
 		for(Entry<String,String> e : devices) {
 			int n = jcl.getDeviceCore(e);
 			for(int i=0;i<n;i++) {
-				Object [] args = {elements.getColumnList(), elements.getOperatorList(),
-									elements.getOpArgList(), elements.getIntraOpFilter(), new Integer(j), new Integer(i)};
+				Object [] args = {elements, new Integer(j), new Integer(i)};
 				tickets.add(jcl.executeOnDevice(e,"Filter", "filtra", args));
 			}
 			j++;
