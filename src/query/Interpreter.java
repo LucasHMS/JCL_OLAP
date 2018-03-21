@@ -145,6 +145,10 @@ public class Interpreter {
 		}
 	}
 	
+	private int checkAgregationOP(String op) {
+		return 0;
+	}
+	
 	public static void main(String [] args) {
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
 		dimensionMeta.put("Data", 0);
