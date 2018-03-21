@@ -10,10 +10,23 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import query.QueryElements;
 import query.filter.operators.*;
 
 public class Filter
 {
+	private JCL_facade jcl;
+	private Map<String, Integer> mesureMeta;
+	private Map<String, Integer> dimensionMeta;
+	private Object2ObjectMap<String, IntCollection> jclInvertedIndex;
+	
+	public Filter() {
+    	jcl = JCL_FacadeImpl.getInstance();
+    	// map dos metadados
+		mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
+		dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
+	}
+	
     /* Recebe 3 lists, a primeira com os nomes das colunas, a segunda com o tipo de filtro e a terceira com
      * os parametros do filtro. A minha classe irá ver se essas informações estão na hash do jcl.
      * Depois de achar a peirmeira coluna eu aplico o filtro, após a aplicacao do primeiro filtro eu irei
@@ -23,78 +36,76 @@ public class Filter
      * do segundo filtro. No fim, terei uma map com apenas os ANDs ds meus parametros.
      * Mais pra frente tambem receberei os filtros das mesures*/
     @SuppressWarnings("unchecked")
-	public void filtra(List<String> coluna, List<Integer> operatorID, List<String> parameters, 
-						List<Integer> intraOpFilter, int machineID, int coreID)
-	{   
+	public void filtra(List<String> columns, List<Integer> operators, List<String> args, 
+			List<Integer> intraOpFilter, int machineID, int coreID){
+    	
+//		List<Integer> intraOps = query.getIntraOpFilter();
 		System.out.println("Iniciando Filter. core " + coreID);
-    	JCL_facade jcl = JCL_FacadeImpl.getInstance();
-    	// map dos metadados
-		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
-		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");
 
-		// map de tuplas
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
-		
-		// map do indice invertido
-		Object2ObjectMap<String, IntCollection> jclInvertedIndex =  (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_invertedIndex_"+coreID).getCorrectResult();
-		
+		jclInvertedIndex =  (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_invertedIndex_"+coreID).getCorrectResult();
+
 		// lista para salvar as maps de resultado de cada filtro da consulta
 		Int2ObjectMap<String> filterResults = new Int2ObjectOpenHashMap<>();
+		filterResults = runFilter(map_core, columns.get(0), operators.get(0), args.get(0));
 		
-		// Filtragem inicial
-		int posicao = dimensionMeta.get(coluna.get(0));
-		// pega a posicao que esta coluna esta na minha map de tuplas
-		int posicao_real = mesureMeta.size()+1+posicao;
-		FilterOperator operator = checkOperator(operatorID.get(0));
-		for(Entry<Integer, String> e : map_core.entrySet()){
-			// caso a tupla já tenha sido adicionada ao resultado, nao é preciso continuar
-			if(filterResults.containsKey(e.getKey()))
-				continue;
-			
-			String [] splitArr = e.getValue().split("\\|");
-			// verifica apenas os values da coluna que foi passada
-			String d = splitArr[posicao_real];
-			// verifica se o valor da coluna nessa tupla passa pelo filtro
-			boolean x = operator.op(d, parameters.get(0)); 
-			if(x == true){	
-				// caso passe pelo filtro, adiciona todas as tuplas com esse valor a map de resultado
-				IntCollection allIds = jclInvertedIndex.get(d);
-				for(int id : allIds) {
-					filterResults.put(id, map_core.get(id));
-				}
-			}
-		}
-		
-		for(int i=1; i<coluna.size(); i++) {
+		for (int i=0; i<columns.size(); i++) {
 			Int2ObjectMap<String> aux = new Int2ObjectOpenHashMap<String>();
-			// pega a posicao da coluna
-			posicao = dimensionMeta.get(coluna.get(i));
-			// pega a posicao que esta coluna esta na minha map de tuplas
-			posicao_real = mesureMeta.size()+1+posicao;
-			FilterOperator filtOp = checkOperator(operatorID.get(i));
-			// percorre map com as tuplas do resultado parcial
-			for(Entry<Integer, String> e : filterResults.entrySet()){
-				// caso a tupla já tenha sido adicionada ao resultado, nao é preciso continuar
-				String [] splitArr = e.getValue().split("\\|");
-				// verifica apenas os values da coluna que foi passada
-				String d = splitArr[posicao_real];
-				// verifica se o valor da coluna nessa tupla passa pelo filtro
-				boolean x = filtOp.op(d, parameters.get(i)); 
-				if(x == true){	
-					// caso passe pelo filtro, adiciona a tupla para a map de resultado
-					aux.put(e.getKey(), e.getValue());
-				}
-			}
+			aux = runFilter(filterResults, columns.get(i), operators.get(i), args.get(i));
+			
 			filterResults.clear();
 			filterResults = null;
 			filterResults = new Int2ObjectOpenHashMap<>(aux);
 		}
-		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, new Int2ObjectOpenHashMap<>(filterResults));
-		//JCLHashMap<Integer, String> m = new JCLHashMap<>("filter_core_"+coreID);
-		//m.putAll(filterResults);
+		
+		Int2ObjectMap<String> cleanResult = generateReult(filterResults, columns);
+		
+		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, cleanResult);
+
 		System.out.println("Finalizou a Filtragem. core " + coreID);
     }
     
+    private Int2ObjectMap<String> runFilter(Int2ObjectMap<String> tuples, String column, int opID, String arg) {
+    	Int2ObjectMap<String> filterResult = new Int2ObjectOpenHashMap<>();
+    	FilterOperator filtOp = checkOperator(opID);
+    	int real_pos = realColumPos(column);
+		for(Entry<Integer, String> e : tuples.entrySet()){
+			String [] splitArr = e.getValue().split("\\|");
+			String columnVal = splitArr[real_pos];
+			boolean result = filtOp.op(columnVal, arg);
+			if (result)
+				filterResult.put(e.getKey(), e.getValue());
+
+		}
+		return filterResult;
+    }
+    
+    private Int2ObjectMap<String> generateReult(Int2ObjectMap<String> rawReults, List<String> columns){
+    	Int2ObjectMap<String> finalResult = new Int2ObjectOpenHashMap<String>();
+		for(Entry<Integer, String> e : rawReults.entrySet()){
+			String cleanedTuple = cleanTuple(e.getValue().split("\\|"), columns);
+			finalResult.put(e.getKey(), cleanedTuple);
+		}
+		return finalResult;
+    }
+    private String cleanTuple(String [] splitedTuple, List<String> columns) {
+    	StringBuilder cleanTuple = new StringBuilder(); 
+    	for (int i=0; i<mesureMeta.size()+1;i++)
+    		cleanTuple.append("|"+splitedTuple[i]);	
+    	for(String c : columns) {
+    		int real_pos = realColumPos(c);
+    		String validColumn = splitedTuple[real_pos];
+    		cleanTuple.append("|"+validColumn);
+    	}
+    	cleanTuple.deleteCharAt(0);
+    	
+    	return cleanTuple.toString();
+    }
+    
+    private int realColumPos(String column) {
+    	int pos = dimensionMeta.get(column);
+		return mesureMeta.size()+1+pos;
+    }
 	/*
 	 * 1 = starts with
      * 2 = ends with
@@ -105,7 +116,7 @@ public class Filter
 	 * 1 = and
 	 * 2 = or
 	 */
-    public FilterOperator checkOperator(int opID) {
+    private FilterOperator checkOperator(int opID) {
     	switch (opID) {
 		case 1:
 			return new StartsWithOp();

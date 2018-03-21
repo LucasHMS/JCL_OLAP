@@ -12,7 +12,7 @@ public class Test1 {
 		try {
 			int size = 1000;
 			long t1 = System.currentTimeMillis();
-			p.readTupla(size,"input/NorthwindSalesData.data");
+			p.readTupla(size,"input/NorthwindSalesData1.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS) Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
@@ -28,7 +28,7 @@ public class Test1 {
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Pais startsWith \"U\" and Produto endsWith \"s\"");
+			qd.readAndParse("Pais startsWith \"B\"");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
@@ -41,6 +41,6 @@ public class Test1 {
 
 /*
  * exemplo de consulta restritiva:
- * 	Categoria > "5" and Pais startsWith "B" and Produto endsWith "s" and Cidade startsWith "Rio"
+ * 	Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"
  * 
  * */
