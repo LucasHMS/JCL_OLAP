@@ -36,10 +36,9 @@ public class Filter
      * do segundo filtro. No fim, terei uma map com apenas os ANDs ds meus parametros.
      * Mais pra frente tambem receberei os filtros das mesures*/
     @SuppressWarnings("unchecked")
-	public void filtra(QueryElements query, int machineID, int coreID){
-    	List<String> columns = query.getColumnList(); 
-    	List<Integer> operators = query.getOperatorList();
-    	List<String> args = query.getOpArgList(); 
+	public void filtra(List<String> columns, List<Integer> operators, List<String> args, 
+			List<Integer> intraOpFilter, int machineID, int coreID){
+    	
 //		List<Integer> intraOps = query.getIntraOpFilter();
 		System.out.println("Iniciando Filter. core " + coreID);
 
