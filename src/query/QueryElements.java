@@ -8,6 +8,7 @@ public class QueryElements {
 	private List<Integer> operatorList;
 	private List<String> opArgList;
 	private List<Integer> intraOpFilter;
+	private List<Integer> agregationOp;
 	
 	public QueryElements() {
 		columnList = new ArrayList<>();
