@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
@@ -81,7 +82,7 @@ public class Producer
 		
 		System.out.println("Bloqueando para finalizar");
 		
-		jcl.getAllResultBlocking(results);
+		//jcl.getAllResultBlocking(results);
 		System.out.println("finalizou");
 		br.close();
 	}
@@ -114,7 +115,12 @@ public class Producer
 		Object[] args= {new ArrayList<>(colection), machineID};
 	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
-		results.add(jcl.execute("Consumer", "save", args));
+//		results.add(jcl.execute("Consumer", "save", args));
+		try {
+			jcl.execute("Consumer", "save", args).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
 		System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}

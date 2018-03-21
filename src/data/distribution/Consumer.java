@@ -18,7 +18,7 @@ public class Consumer {
 //		System.out.println("maquina: " + machineID);
 		int localCores = Runtime.getRuntime().availableProcessors();
 		int buffSize = buffer.size();
-//		System.out.println("tamaho buffer: "+buffSize);
+//		System.err.println("tamaho buffer: "+buffSize);
 		int divide_factor = buffSize/localCores;
 //		System.out.println("divide factor: "+divide_factor);
 		int k = 0;
@@ -47,16 +47,17 @@ public class Consumer {
 				m_aux.putAll(m);
 				jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
 			}*/
-			System.out.println("LOCK: M="+machineID+" - C="+i);
+			System.err.println("LOCK: M="+machineID+" - C="+i);
 			m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_"+i).getCorrectResult();
 			m_aux.putAll(m);
 //			System.out.println("PUTALL: M="+machineID+" - C="+i);
 			jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
-			System.out.println("UNLOCK: M="+machineID+" - C="+i);
+			System.err.println("UNLOCK: M="+machineID+" - C="+i);
+			System.out.println("TAMANHO MAP DO ARQUIVO: " + m.size());
 			util.FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
-			System.out.println("ESCREVENDO O QUE SOBROU");
+			System.err.println("ESCREVENDO O QUE SOBROU");
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 			for(;k<buffSize;k++){
 				m.put(buffer.get(k).getKey(), buffer.get(k).getValue());
@@ -65,13 +66,15 @@ public class Consumer {
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			//hm.putAll(m);
 			
+			System.err.println("LOCK: M="+machineID+" - C="+0);
 			Int2ObjectMap<String> m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_0").getCorrectResult();
 			m_aux.putAll(m);
 			jcl.setValueUnlocking(machineID+"_core_0", m_aux);
-			
+			System.err.println("UNLOCK: M="+machineID+" - C="+0);
+
 			util.FileManip.writeTuplesTxt(m, 0);
 		}
-		System.out.println("finalizou para maquina " + machineID);
+		System.err.println("finalizou para maquina " + machineID);
 	}
 	
 	public void instanciateCoreMaps(int machineID) {
