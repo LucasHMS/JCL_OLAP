@@ -8,9 +8,10 @@ import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import query.QueryElements;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import query.filter.operators.*;
 
 public class Filter
@@ -58,7 +59,7 @@ public class Filter
 			filterResults = new Int2ObjectOpenHashMap<>(aux);
 		}
 		
-		Int2ObjectMap<String> cleanResult = generateReult(filterResults, columns);
+		Object2ObjectMap<String, IntCollection> cleanResult = generateReult(filterResults, columns);
 		
 		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, cleanResult);
 
@@ -80,24 +81,31 @@ public class Filter
 		return filterResult;
     }
     
-    private Int2ObjectMap<String> generateReult(Int2ObjectMap<String> rawReults, List<String> columns){
-    	Int2ObjectMap<String> finalResult = new Int2ObjectOpenHashMap<String>();
+    private Object2ObjectMap<String, IntCollection> generateReult(Int2ObjectMap<String> rawReults, List<String> columns){
+    	Object2ObjectMap<String, IntCollection> finalResult = new Object2ObjectOpenHashMap<String, IntCollection>();
 		for(Entry<Integer, String> e : rawReults.entrySet()){
 			String cleanedTuple = cleanTuple(e.getValue().split("\\|"), columns);
-			finalResult.put(e.getKey(), cleanedTuple);
+			if(!finalResult.containsKey(cleanedTuple)) {
+				IntCollection keyList = new IntArrayList();
+				keyList.add(e.getKey());
+				finalResult.put(cleanedTuple, keyList);
+			}else
+				finalResult.get(cleanedTuple).add(e.getKey());
 		}
 		return finalResult;
     }
     private String cleanTuple(String [] splitedTuple, List<String> columns) {
     	StringBuilder cleanTuple = new StringBuilder(); 
-    	for (int i=0; i<mesureMeta.size()+1;i++)
-    		cleanTuple.append("|"+splitedTuple[i]);	
+    		
     	for(String c : columns) {
     		int real_pos = realColumPos(c);
     		String validColumn = splitedTuple[real_pos];
     		cleanTuple.append("|"+validColumn);
     	}
     	cleanTuple.deleteCharAt(0);
+    	/*
+    	for (int i=0; i<mesureMeta.size()+1;i++)
+    		cleanTuple.append("|"+splitedTuple[i]);*/
     	
     	return cleanTuple.toString();
     }

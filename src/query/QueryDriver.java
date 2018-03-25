@@ -9,7 +9,8 @@ import java.util.concurrent.Future;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
 public class QueryDriver {
 	JCL_facade jcl = JCL_FacadeImpl.getInstance();
@@ -52,29 +53,26 @@ public class QueryDriver {
 	public void filterQuery() {
 		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
-		int j = 0;
-		for(Entry<String,String> e : devices) {
+		for(int i=0;i<devices.size();i++) {
+			Entry<String,String> e = devices.get(i);
 			int n = jcl.getDeviceCore(e);
-			for(int i=0;i<n;i++) {
+			for(int j=0;j<n;j++) {
 				Object [] args = {elements.getColumnList(), elements.getOperatorList(), elements.getOpArgList(),
-									elements.getIntraOpFilter(), new Integer(j), new Integer(i)};
+									elements.getIntraOpFilter(), new Integer(i), new Integer(j)};
 				tickets.add(jcl.executeOnDevice(e,"Filter", "filtra", args));
 			}
-			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
 		
-		j = 0;
-		for(Entry<String,String> e : devices) {
-			int n = jcl.getDeviceCore(e);
-			for(int i=0;i<n;i++) {
-//				System.out.println("M="+j + " - C= " + i);
-				Int2ObjectMap<String> filterResults = (Int2ObjectMap<String>) jcl.getValue(j+"_filter_core_"+i).getCorrectResult();
-				for(Entry<Integer, String> e1 : filterResults.entrySet()) {
-					System.out.println(e1.getValue());
+		for(int i=0;i<devices.size();i++) {
+			int n = jcl.getDeviceCore(devices.get(i));
+			for(int j=0;j<n;j++) {
+				System.out.println("M="+i + " - C= " + j);
+				Object2ObjectMap<String, IntCollection> filterResults = (Object2ObjectMap<String, IntCollection>) jcl.getValue(i+"_filter_core_"+j).getCorrectResult();
+				for(Entry<String, IntCollection> e : filterResults.entrySet()) {
+					System.out.println(e.getKey() + " => " + e.getValue());
 				}
 			}
-			j++;
 		}
 	}
 }
