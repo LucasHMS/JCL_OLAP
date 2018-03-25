@@ -33,10 +33,7 @@ public class QueryDriver {
 		}
 		
 		elements = i.getElements();
-		/*System.out.println("colum list: " + elements.getColumnList());
-		System.out.println("op list: " + elements.getOperatorList());
-		System.out.println("arg list: " + elements.getOpArgList());
-		System.out.println("intra op list: " + elements.getIntraOpFilter());*/
+//		System.out.println(elements);
 	}
 	
 	public void readAndParse(String queryText) {
@@ -48,10 +45,7 @@ public class QueryDriver {
 		}
 		
 		elements = i.getElements();
-		/*System.out.println("colum list: " + elements.getColumnList());
-		System.out.println("op list: " + elements.getOperatorList());
-		System.out.println("arg list: " + elements.getOpArgList());
-		System.out.println("intra op list: " + elements.getIntraOpFilter());*/
+//		System.out.println(elements);
 	}
 	
 	@SuppressWarnings("unchecked")
