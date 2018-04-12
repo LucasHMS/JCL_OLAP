@@ -2,6 +2,7 @@ package test;
 
 import java.io.IOException;
 
+import cube.CubeDriver;
 import data.distribution.Producer;
 import index.Index;
 import query.QueryDriver;
@@ -10,9 +11,9 @@ public class Test1 {
 	public static void main(String [] args){
 		Producer p = new Producer();
 		try {
-			int size = 1000;
+			int size = 5000;
 			long t1 = System.currentTimeMillis();
-			p.readTupla(size,"input/NorthwindSalesData1.data");
+			p.readTupla(size,"input/NorthwindSalesData.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS) Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
@@ -28,11 +29,17 @@ public class Test1 {
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Pais startsWith \"Germany\" and Cidade startsWith \"Frankfurt a,M,\"; max PrecoUnitario;");
+			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
+			
+			CubeDriver cd = new CubeDriver();
+			t1 = System.currentTimeMillis();
+			cd.exeCube();
+			t2 = System.currentTimeMillis();
+			System.out.println("(CRIAR CUBO)" + ((t2-t1)*1.0/1000) + "s");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -40,7 +47,7 @@ public class Test1 {
 }
 
 /*
- * exemplo de consulta restritiva:
- * 	Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\; max PrecoUnitario;"
- * 
+ * exemplos:
+ * 	"Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 	"Pais startsWith \"S\" and Cidade startsWith \"S\" and Empresa startsWith \"R\"; max PrecoUnitario;"
  * */
