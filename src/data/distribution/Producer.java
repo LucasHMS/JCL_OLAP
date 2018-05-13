@@ -23,7 +23,7 @@ public class Producer
 	private List<Entry<String, String>> host;
 	private String tuplas;
 	private int contHost=0;
-	private List<Future<JCL_result>> results = new ArrayList<>();
+	//private List<Future<JCL_result>> results = new ArrayList<>();
 	
 	public Producer()
 	{	
@@ -115,9 +115,9 @@ public class Producer
 		Object[] args= {new ArrayList<>(colection), machineID};
 	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
-//		results.add(jcl.execute("Consumer", "save", args));
+    //	results.add(jcl.execute("Consumer", "save", args));
 		try {
-			jcl.execute("Consumer", "save", args).get();
+			jcl.executeOnDevice(host.get(machineID),"Consumer", "save", args).get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
