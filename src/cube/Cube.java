@@ -21,6 +21,24 @@ public class Cube {
 		jcl = JCL_FacadeImpl.getInstance();
 	}
 
+	public void createCube(int machineID, int coreID, int nDimensions) {
+        Object2ObjectMap<String, IntCollection> filtResult = (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_filter_core_"+coreID).getCorrectResult();
+        Object2ObjectMap<String, IntCollection> aux = new Object2ObjectOpenHashMap<>();
+		for(int i=0; i<nDimensions; i++) {
+			for(Entry<String,IntCollection> e : filtResult.entrySet()){
+				String newTuple = arrangeTuple(e.getKey(), i);
+				if(!aux.containsKey(newTuple)) {
+					aux.put(newTuple, new IntArrayList());
+				}
+				aux.get(newTuple).addAll(e.getValue());
+			}
+			filtResult.putAll(aux);
+			aux.clear();
+		}
+		
+		jcl.setValueUnlocking(machineID+"_filter_core_"+coreID, filtResult);
+	}
+	
 	public void createCube(int machineID, int coreID) {
 		System.out.println("CRIANDO CUBO PARA " + machineID + " - " + coreID);
 		Object2ObjectMap<String, IntCollection> filtResult = (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_filter_core_"+coreID).getCorrectResult();
@@ -44,7 +62,6 @@ public class Cube {
 		
 		filtResult.putAll(aux);
 		jcl.setValueUnlocking(machineID+"_filter_core_"+coreID, filtResult);
-		
 	}
 	
 	public boolean checkContent(String target, String subStrings) {
@@ -60,7 +77,18 @@ public class Cube {
 		return false;
 	}
 
+	public String arrangeTuple(String tuple, int dimension) {
+		String [] splitedStrs = tuple.split("\\|");
+		splitedStrs[dimension] = "ALL";
+		StringJoiner joiner = new StringJoiner("|");
+		for(int i=0; i<splitedStrs.length;i++) {
+//			if(i == dimension) continue;
+			joiner.add(splitedStrs[i]);
+		}
 
+		return joiner.toString();
+	}
+	
 	public void combinationUtil(String arr[], String [] data, int start, int end, int index, int r, List<String> combinations){
 		if (index == r){
 			StringJoiner joiner = new StringJoiner("|");
@@ -86,6 +114,7 @@ public class Cube {
 		return combinations;
 	}
 
+	
 	/*public static void main (String[] args) {
 		Cube c = new Cube();
 		String [] values = {"casa","arvore","animal","lancha"};
