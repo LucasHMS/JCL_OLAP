@@ -133,11 +133,12 @@ public class Interpreter {
 			c = queryText.charAt(pos++);
 		}while(!(c == ' ' || c == ';'));
 		
-		if (!checkMesure(column)) {
+		int p = checkMesure(column); 
+		if (p == -1) {
 			throw new Exception("Invalid Column " + column);
 		}
 		
-		elements.setAgregationColumns(column);		
+		elements.setAgregationColumns(p);		
 		
 		return pos;
 	}
@@ -164,8 +165,11 @@ public class Interpreter {
 		return dimensionMeta.containsKey(column);
 	}
 	
-	private boolean checkMesure(String column) {
-		return mesureMeta.containsKey(column);
+	private int checkMesure(String column) {
+		Integer pos = mesureMeta.get(column);
+		if (pos == null) return -1;
+		
+		return pos+1;/*mesureMeta.containsKey(column);*/
 	}
 	
 	private int checkOperator(String op) {

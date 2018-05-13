@@ -9,7 +9,7 @@ public class QueryElements {
 	private List<String> opArgList;
 	private List<Integer> intraOpFilter;
 	private List<Integer> agregationOp;
-	private List<String> agregationColumns;
+	private List<Integer> agregationColumns;
 	
 	public QueryElements() {
 		columnList = new ArrayList<>();
@@ -53,11 +53,11 @@ public class QueryElements {
 		agregationOp.add(agrgOp);
 	}
 
-	public List<String> getAgregationColumns() {
+	public List<Integer> getAgregationColumns() {
 		return agregationColumns;
 	}
 
-	public void setAgregationColumns(String column) {
+	public void setAgregationColumns(Integer column) {
 		agregationColumns.add(column);
 	}
 
@@ -68,7 +68,7 @@ public class QueryElements {
 		s.append("arg list: " + opArgList + "\n");
 		s.append("intra op list: " + intraOpFilter + "\n");
 		s.append("agregation op: " + agregationOp + "\n");
-		s.append("agregation op: " + agregationColumns);
+		s.append("agregation colum: " + agregationColumns);
 		
 		return s.toString();
 	}
