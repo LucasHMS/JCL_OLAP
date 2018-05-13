@@ -2,7 +2,7 @@ package test;
 
 import java.io.IOException;
 
-import cube.CubeDriver;
+//import cube.CubeDriver;
 import data.distribution.Producer;
 import index.Index;
 import query.QueryDriver;
@@ -29,15 +29,14 @@ public class Test1 {
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+			qd.readAndParse("Pais startsWith \"B\" and Cidade startsWith \"R\" and Produto endsWith \"s\"; max PrecoUnitario;");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
 			
-			CubeDriver cd = new CubeDriver();
 			t1 = System.currentTimeMillis();
-			cd.exeCube();
+			qd.createCube();
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR CUBO)" + ((t2-t1)*1.0/1000) + "s");
 		} catch (IOException e) {
