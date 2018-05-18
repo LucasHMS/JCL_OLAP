@@ -7,24 +7,30 @@ import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
 import cube.Cube;
+import cube.aggregation.Aggregation;
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
+import it.unimi.dsi.fastutil.doubles.DoubleCollection;
 import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
 public class QueryDriver {
-	JCL_facade jcl = JCL_FacadeImpl.getInstance();
+	JCL_facade jcl;
+	List<Entry<String,String>> devices;
 	private QueryElements elements;
 
 	public QueryDriver() {
+		jcl = JCL_FacadeImpl.getInstance();
+		devices = jcl.getDevices();
+		
 		File f1 = new File("lib/filter.jar");
 		File f2 = new File("lib/filteroperators.jar");
 //		File f3 = new File("lib/queryelements.jar");
 		File [] jars = { f1, f2 };
 		System.out.println("registro Filter: " + jcl.register(jars, "Filter"));
 		jcl.register(Cube.class, "Cube");
-		
 	}
 	
 	public void readAndParse() {
@@ -54,7 +60,6 @@ public class QueryDriver {
 	
 	@SuppressWarnings("unchecked")
 	public void filterQuery() {
-		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		for(int i=0;i<devices.size();i++) {
 			Entry<String,String> e = devices.get(i);
@@ -81,7 +86,6 @@ public class QueryDriver {
 
 	@SuppressWarnings("unchecked")
 	public void createCube() {
-		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
 		int nDimensions = elements.getColumnList().size();
 		for(int i=0;i<devices.size();i++) {
@@ -105,4 +109,34 @@ public class QueryDriver {
 			}
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public void aggregateCubes() {
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
+		List<Integer> aggColuns = elements.getAgregationColumns();
+		for(int i=0;i<devices.size();i++) {
+			Entry<String,String> e = devices.get(i);
+			int n = jcl.getDeviceCore(e);
+			for(int j=0;j<n;j++) {
+				Object [] args = {i,j,aggColuns};
+				tickets.add(jcl.executeOnDevice(e,"Cube", "getMeasureValues", args));
+			}
+		}
+		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
+		
+		List<Object2ObjectMap<String, DoubleCollection>> aggregationValues = new ArrayList<>();
+		for(JCL_result r: results) {
+			aggregationValues.add((Object2ObjectMap<String, DoubleCollection>) r.getCorrectResult());
+		}
+		
+		Aggregation ag = new Aggregation(elements.getAgregationOp().get(0));
+		ag.mergeSubCubes(aggregationValues);
+		Object2DoubleMap<String>  aggResult = ag.aggregate();
+		
+		for(Entry<String,Double> e : aggResult.entrySet()) {
+			System.out.println(e.getKey() + " : " + e.getValue());
+		}
+
+	}
+
 }
