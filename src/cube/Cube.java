@@ -8,6 +8,9 @@ import java.util.StringJoiner;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleCollection;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -114,6 +117,25 @@ public class Cube {
 		return combinations;
 	}
 
+
+    public Object2ObjectMap<String, DoubleCollection> getMeasureValues(int machineID, int coreID, List<Integer> aggregationColumns){
+        Object2ObjectMap<String, IntCollection> filtResult = (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_filter_core_"+coreID).getCorrectResult();
+        Object2ObjectMap<String, Int2DoubleOpenHashMap> measureIndex = (Object2ObjectMap<String, Int2DoubleOpenHashMap>) jcl.getValue(machineID+"_mesureIndex_"+coreID).getCorrectResult();
+        Object2ObjectMap<String, DoubleCollection> aggregationValues = new Object2ObjectOpenHashMap<>(); 
+        
+        for(Entry<String, IntCollection> e : filtResult.entrySet()) {
+            for(Integer i : e.getValue()) {
+                if(!aggregationValues.containsKey(e.getKey())) {
+                    DoubleCollection values = new DoubleArrayList();
+                    aggregationValues.put(e.getKey(), values);
+                }
+                double value = measureIndex.get(i.toString()).get(aggregationColumns.get(0).intValue());
+                aggregationValues.get(e.getKey()).add(value);
+            }
+        }
+                
+        return aggregationValues;
+    }
 	
 	/*public static void main (String[] args) {
 		Cube c = new Cube();
