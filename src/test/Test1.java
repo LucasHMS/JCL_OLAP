@@ -29,7 +29,7 @@ public class Test1 {
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Pais startsWith \"B\" and Cidade startsWith \"R\" and Produto endsWith \"s\"; max PrecoUnitario;");
+			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
 			t1 = System.currentTimeMillis();
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
@@ -39,6 +39,11 @@ public class Test1 {
 			qd.createCube();
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR CUBO)" + ((t2-t1)*1.0/1000) + "s");
+			
+			t1 = System.currentTimeMillis();
+			qd.aggregateCubes();
+			t2 = System.currentTimeMillis();
+			System.out.println("(AGREGAÇÃO)" + ((t2-t1)*1.0/1000) + "s");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,6 +52,6 @@ public class Test1 {
 
 /*
  * exemplos:
- * 	"Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
- * 	"Pais startsWith \"S\" and Cidade startsWith \"S\" and Empresa startsWith \"R\"; max PrecoUnitario;"
+ * 	(Base 0, 1 ou 2) "Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 	(Base 3)"Pais startsWith \"S\" and Cidade startsWith \"S\" and Empresa startsWith \"R\"; max PrecoUnitario;"
  * */
