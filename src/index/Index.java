@@ -24,13 +24,13 @@ public class Index {
 	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
-	public void loadMetadata()
+	public void loadMetadata(String subpath)
 	{
 		String mesure = null, dimension = null;
 		try {
 			// le asrquivos metadata
-			mesure = FileManip.metaDataToString("input/measuresnames.mg");
-			dimension = FileManip.metaDataToString("input/dimensionsnames.mg");
+			mesure = FileManip.metaDataToString(subpath + "measuresnames.mg");
+			dimension = FileManip.metaDataToString(subpath + "dimensionsnames.mg");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
