@@ -47,17 +47,17 @@ public class Consumer {
 				m_aux.putAll(m);
 				jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
 			}*/
-			System.err.println("LOCK: M="+machineID+" - C="+i);
+//			System.err.println("LOCK: M="+machineID+" - C="+i);
 			m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_"+i).getCorrectResult();
 			m_aux.putAll(m);
 //			System.out.println("PUTALL: M="+machineID+" - C="+i);
 			jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
-			System.err.println("UNLOCK: M="+machineID+" - C="+i);
-			System.out.println("TAMANHO MAP DO ARQUIVO: " + m.size());
+//			System.err.println("UNLOCK: M="+machineID+" - C="+i);
+//			System.out.println("TAMANHO MAP DO ARQUIVO: " + m.size());
 			util.FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
-			System.err.println("ESCREVENDO O QUE SOBROU");
+//			System.err.println("ESCREVENDO O QUE SOBROU");
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 			for(;k<buffSize;k++){
 				m.put(buffer.get(k).getKey(), buffer.get(k).getValue());
@@ -66,26 +66,26 @@ public class Consumer {
 			//Map<Integer, String> hm = new JCLHashMap<>(machineID+":"+0);
 			//hm.putAll(m);
 			
-			System.err.println("LOCK: M="+machineID+" - C="+0);
+//			System.err.println("LOCK: M="+machineID+" - C="+0);
 			Int2ObjectMap<String> m_aux = (Int2ObjectMap<String>) jcl.getValueLocking(machineID+"_core_0").getCorrectResult();
 			m_aux.putAll(m);
 			jcl.setValueUnlocking(machineID+"_core_0", m_aux);
-			System.err.println("UNLOCK: M="+machineID+" - C="+0);
+//			System.err.println("UNLOCK: M="+machineID+" - C="+0);
 
 			util.FileManip.writeTuplesTxt(m, 0);
 		}
-		System.err.println("finalizou para maquina " + machineID);
+//		System.err.println("finalizou para maquina " + machineID);
 	}
 	
 	public void instanciateCoreMaps(int machineID) {
-		System.out.println("**** intanciando as maps da maquina " + machineID + " ****");
+//		System.out.println("**** intanciando as maps da maquina " + machineID + " ****");
 		int localCores = Runtime.getRuntime().availableProcessors();
 		for (int i=0; i<localCores;i++) {
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 			m.clear();
-			System.out.println(jcl.instantiateGlobalVar(machineID+"_core_"+i,m));
+//			System.out.println(jcl.instantiateGlobalVar(machineID+"_core_"+i,m));
 		}
-		System.out.println("**** finalizou instanciacao maquina " + machineID + " ****");
+//		System.out.println("**** finalizou instanciacao maquina " + machineID + " ****");
 	}
 }
 	

@@ -64,9 +64,9 @@ public class Producer
 			if(i == size)
 			{
 			//	Passo-3: envia para as maquinas
-				System.out.println("enviou " + i);
+				// System.out.println("enviou " + i);
 				sendBuffer();
-				System.out.println("finalizou envio");
+				// System.out.println("finalizou envio");
 				colection.clear();
 				i = 0;
 			}
@@ -74,16 +74,16 @@ public class Producer
 	//	envia a colecao caso sobre tuplas no fim arquivo
 		if(i != 0)
 		{
-			System.out.println("enviou o que sobrou");
-			System.out.println("enviou " + i);
+			// System.out.println("enviou o que sobrou");
+			// System.out.println("enviou " + i);
 			sendBuffer();
-			System.out.println("finalizou envio");
+			// System.out.println("finalizou envio");
 		}
 		
-		System.out.println("Bloqueando para finalizar");
+		// System.out.println("Bloqueando para finalizar");
 		
 		//jcl.getAllResultBlocking(results);
-		System.out.println("finalizou");
+		// System.out.println("finalizou");
 		br.close();
 	}
 	
@@ -121,7 +121,7 @@ public class Producer
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-		System.out.println("enviou para maquina " + machineID);
+		// System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}
 }
