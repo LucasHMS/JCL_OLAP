@@ -14,11 +14,13 @@ import java.io.IOException;
 import util.FileManip;
 
 public class Index {
-	JCL_facade jcl = JCL_FacadeImpl.getInstance();
-
+	JCL_facade jcl;
+	List<Entry<String,String>> devices;
+	
 	public Index() {
 		jcl = JCL_FacadeImpl.getInstance();
-		System.out.println("registro jcl index: "+jcl.register(JCL_Index.class, "JCL_Index"));
+		jcl.register(JCL_Index.class, "JCL_Index");
+		devices = jcl.getDevices();
 	}
 
 	// cria arquivos metadata em todas as maquinas do cluster
@@ -33,9 +35,8 @@ public class Index {
 			e.printStackTrace();
 		}
 
-		List<Entry<String,String>> hosts = jcl.getDevices();
-		Object [][] args = new Object[hosts.size()][];
-		for(int i=0;i < hosts.size(); i++) {
+		Object [][] args = new Object[devices.size()][];
+		for(int i=0;i < devices.size(); i++) {
 			Object [] a = {mesure, dimension};
 			args[i] = a; 
 		}
@@ -48,7 +49,6 @@ public class Index {
 	}
 
 	public void createIndex(String origin){
-		List<Entry<String,String>> devices = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		int j = 0;
 		for(Entry<String,String> e : devices) {
@@ -67,5 +67,15 @@ public class Index {
 		System.out.println("Mesure Index");
 		for(int x=0;x<4;x++)
 			System.out.println("CORE " + x + " " + jcl.getValue(0+"_mesureIndex_"+x).getCorrectResult());*/
+	}
+	
+	public void deleteIndices() {
+		for(int i=0;i<devices.size();i++) {
+			int n = jcl.getDeviceCore(devices.get(i));
+			for(int j=0;j<n;j++) {
+				jcl.deleteGlobalVar(i+"_invertedIndex_"+j);
+				jcl.deleteGlobalVar(i+"_mesureIndex_"+j);
+			}
+		}
 	}
 }

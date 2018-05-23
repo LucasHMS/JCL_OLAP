@@ -124,4 +124,13 @@ public class Producer
 		// System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}
+	
+	public void deleteDistributedBase() {
+		for(int i=0;i<host.size();i++) {
+			int n = jcl.getDeviceCore(host.get(i));
+			for(int j=0;j<n;j++) {
+				jcl.deleteGlobalVar(i+"_core_"+j);
+			}
+		}
+	}
 }

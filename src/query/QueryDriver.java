@@ -145,4 +145,15 @@ public class QueryDriver {
 			}
 		}
 	}
+	
+	public void deleteFilterResult() {
+		for(int i=0;i<devices.size();i++) {
+			int n = jcl.getDeviceCore(devices.get(i));
+			for(int j=0;j<n;j++) {
+				jcl.deleteGlobalVar(i+"_filter_core_"+j);
+			}
+		}
+	}
+	
+	
 }
