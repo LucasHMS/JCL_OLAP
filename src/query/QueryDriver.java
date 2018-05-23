@@ -17,9 +17,11 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
 public class QueryDriver {
-	JCL_facade jcl;
-	List<Entry<String,String>> devices;
+	private JCL_facade jcl;
+	private List<Entry<String,String>> devices;
 	private QueryElements elements;
+	
+	public static boolean VERBOSITY = false;
 
 	public QueryDriver() {
 		jcl = JCL_FacadeImpl.getInstance();
@@ -43,7 +45,7 @@ public class QueryDriver {
 		}
 		
 		elements = i.getElements();
-//		System.out.println(elements);
+		if(VERBOSITY) System.out.println(elements);
 	}
 	
 	public void readAndParse(String queryText) {
@@ -55,7 +57,7 @@ public class QueryDriver {
 		}
 		
 		elements = i.getElements();
-//		System.out.println(elements);
+		if(VERBOSITY) System.out.println(elements);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -72,13 +74,15 @@ public class QueryDriver {
 		}
 		jcl.getAllResultBlocking(tickets);
 		
-		for(int i=0;i<devices.size();i++) {
-			int n = jcl.getDeviceCore(devices.get(i));
-			for(int j=0;j<n;j++) {
-				System.out.println("M="+i + " - C= " + j);
-				Object2ObjectMap<String, IntCollection> filterResults = (Object2ObjectMap<String, IntCollection>) jcl.getValue(i+"_filter_core_"+j).getCorrectResult();
-				for(Entry<String, IntCollection> e : filterResults.entrySet()) {
-					System.out.println(e.getKey() + " => " + e.getValue());
+		if(VERBOSITY) {
+			for(int i=0;i<devices.size();i++) {
+				int n = jcl.getDeviceCore(devices.get(i));
+				for(int j=0;j<n;j++) {
+					System.out.println("M="+i + " - C= " + j);
+					Object2ObjectMap<String, IntCollection> filterResults = (Object2ObjectMap<String, IntCollection>) jcl.getValue(i+"_filter_core_"+j).getCorrectResult();
+					for(Entry<String, IntCollection> e : filterResults.entrySet()) {
+						System.out.println(e.getKey() + " => " + e.getValue());
+					}
 				}
 			}
 		}
@@ -98,13 +102,15 @@ public class QueryDriver {
 		}
 		jcl.getAllResultBlocking(tickets);
 		
-		for(int i=0;i<devices.size();i++) {
-			int n = jcl.getDeviceCore(devices.get(i));
-			for(int j=0;j<n;j++) {
-				System.out.println("M="+i + " - C= " + j);
-				Object2ObjectMap<String, IntCollection> filterResults = (Object2ObjectMap<String, IntCollection>) jcl.getValue(i+"_filter_core_"+j).getCorrectResult();
-				for(Entry<String, IntCollection> e : filterResults.entrySet()) {
-					System.out.println(e.getKey() + " => " + e.getValue());
+		if(VERBOSITY) {
+			for(int i=0;i<devices.size();i++) {
+				int n = jcl.getDeviceCore(devices.get(i));
+				for(int j=0;j<n;j++) {
+					System.out.println("M="+i + " - C= " + j);
+					Object2ObjectMap<String, IntCollection> filterResults = (Object2ObjectMap<String, IntCollection>) jcl.getValue(i+"_filter_core_"+j).getCorrectResult();
+					for(Entry<String, IntCollection> e : filterResults.entrySet()) {
+						System.out.println(e.getKey() + " => " + e.getValue());
+					}
 				}
 			}
 		}
@@ -133,10 +139,10 @@ public class QueryDriver {
 		ag.mergeSubCubes(aggregationValues);
 		Object2DoubleMap<String>  aggResult = ag.aggregate();
 		
-		for(Entry<String,Double> e : aggResult.entrySet()) {
-			System.out.println(e.getKey() + " : " + e.getValue());
+		if(VERBOSITY) {
+			for(Entry<String,Double> e : aggResult.entrySet()) {
+				System.out.println(e.getKey() + " : " + e.getValue());
+			}
 		}
-
 	}
-
 }

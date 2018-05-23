@@ -31,6 +31,7 @@ public class Test1 {
 			QueryDriver qd = new QueryDriver();
 			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
 			t1 = System.currentTimeMillis();
+			QueryDriver.VERBOSITY = true;
 			qd.filterQuery();
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM)" + ((t2-t1)*1.0/1000) + "s");
