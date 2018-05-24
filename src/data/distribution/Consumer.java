@@ -83,7 +83,8 @@ public class Consumer {
 		for (int i=0; i<localCores;i++) {
 			Int2ObjectMap<String> m = new Int2ObjectOpenHashMap<String>();
 			m.clear();
-//			System.out.println(jcl.instantiateGlobalVar(machineID+"_core_"+i,m));
+			jcl.instantiateGlobalVar(machineID+"_core_"+i,m);
+//			System.out.println();
 		}
 //		System.out.println("**** finalizou instanciacao maquina " + machineID + " ****");
 	}

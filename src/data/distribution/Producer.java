@@ -37,8 +37,9 @@ public class Producer
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		int j = 0;
 		for(Entry<String,String> e : host) {
-				Object [] args = {new Integer(j)};
-				tickets.add(jcl.executeOnDevice(e,"Consumer", "instanciateCoreMaps", args));
+			System.out.println(j);
+			Object [] args = {new Integer(j)};
+			tickets.add(jcl.executeOnDevice(e,"Consumer", "instanciateCoreMaps", args));
 			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
