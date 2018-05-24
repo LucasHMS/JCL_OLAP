@@ -13,13 +13,13 @@ public class Test1 {
 		try {
 			int size = 5000;
 			long t1 = System.currentTimeMillis();
-			p.readTupla(size,"input/NorthwindSalesData.data");
+			p.readTupla(size,"input/SaberFast/SaberFast.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS) Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
 			Index i = new Index();
 			t1 = System.currentTimeMillis();
-			i.loadMetadata();
+			i.loadMetadata("input/SaberFast/");
 			t2 = System.currentTimeMillis();
 			System.out.println("(CARREGAR METADADOS)" + ((t2-t1)*1.0/1000) + "s");
 			
@@ -29,7 +29,7 @@ public class Test1 {
 			System.out.println("(CRIAR INDICES)" + ((t2-t1)*1.0/1000) + "s");
 			
 			QueryDriver qd = new QueryDriver();
-			qd.readAndParse("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+			qd.readAndParse("Diretoria endsWith \"IZ\" and Colaborador startsWith \"RA\" and Cargo startsWith \"AUX\"; max total_score;");
 			t1 = System.currentTimeMillis();
 			QueryDriver.VERBOSITY = true;
 			qd.filterQuery();

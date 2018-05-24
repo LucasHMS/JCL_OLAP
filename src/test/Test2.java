@@ -23,15 +23,21 @@ public class Test2 {
 			Producer p = new Producer();
 
 			List<String> bases = new ArrayList<>();
-			bases.add("Base1");
-			bases.add("Base2");
-			bases.add("Base3");
+			bases.add("input/NorthwindSalesData.data");
+			bases.add("input/NorthwindSalesData2.data");
+			bases.add("input/SaberFast/SaberFast.data");
+			
+			List<String> metadataSubPath = new ArrayList<>();
+			metadataSubPath.add("input/");
+			metadataSubPath.add("input/");
+			metadataSubPath.add("input/SaberFast/");
 			
 			List<String> consultas = new ArrayList<>();
 			consultas.add("consulta1");
 			consultas.add("consulta2");
 			consultas.add("consulta3");
 			
+			int cont1 = 0;
 			for(String b : bases) {
 				StringJoiner textoArquivo = new StringJoiner("\n");
 				textoArquivo.add("\nTestes para base: " + b);
@@ -47,7 +53,7 @@ public class Test2 {
 
 				// gera os indices
 				t1 = System.currentTimeMillis();
-				i.loadMetadata();
+				i.loadMetadata(metadataSubPath.get(cont1++));
 				t2 = System.currentTimeMillis();
 				
 				s = "(CARREGAR METADADOS) " + ((t2-t1)*1.0/1000);
@@ -110,3 +116,53 @@ public class Test2 {
 		}
 	}
 }
+
+/*
+ * 					Tamanho das Bases
+ * 
+ * ___BASE___|___TAMANHO___|__DIMENSÃO__|__MEASURES__|
+ * 	   G	 |	 1055945   |	 8		|	  2	     |
+ * 	   M	 |   525328	   |	 11		|	  5	     |
+ *     P	 |	 150851	   |	 8		|	  2	     |
+ *_____________________________________________________________
+ * 
+ * 		Quantidade de colunos por restritividade em cada base
+ * 
+ * 	RESTRITIVIDADE \ BASE |___1___|___2___|___3___|
+ * 		Alta			  |	  6	  |	  8	  |   6	  |	
+ * 		Media			  |	  4	  |	  6	  |	  4	  |
+ * 		Baixa			  |	  2	  |	  3	  |	  2	  |
+ *_____________________________________________________________
+ * 
+ * 						Consultas
+ * 
+ * - Base G.
+ * 	- Rest A: "Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\" and Cliente startsWith \"HANAR\" and CEP startsWith \"05454\"; max PrecoUnitario;"
+ * 	- Rest M: "Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 	- Rest B: "Pais startsWith \"Br\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 
+ * - Base M.
+ * 	- Rest A: 
+ * 	- Rest M:
+ * 	- Rest B: "Diretoria endsWith \"IZ\" and Colaborador startsWith \"RA\" and Cargo startsWith \"AUX\"; max total_score;" 
+ * 
+ * - Base P.
+ * 	- Rest A: "Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\" and Cliente startsWith \"HANAR\" and CEP startsWith \"05454\"; max PrecoUnitario;"
+ * 	- Rest M: "Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 	- Rest B: "Pais startsWith \"Br\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
+ * 
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
