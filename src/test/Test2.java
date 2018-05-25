@@ -32,17 +32,33 @@ public class Test2 {
 			metadataSubPath.add("input/");
 			metadataSubPath.add("input/SaberFast/");
 			
-			List<String> consultas = new ArrayList<>();
-			consultas.add("consulta1");
-			consultas.add("consulta2");
-			consultas.add("consulta3");
+			List<List<String>> consultas = new ArrayList<>();
+			for(int j = 0; j < 3; j++)
+			{
+				List<String> l = new ArrayList<>();
+				consultas.add(l);	
+			}
+			
+		// Consulta arquivo Pequeno
+			consultas.get(0).add("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\" and Cliente startsWith \"HANAR\" and CEP startsWith \"05454\"; max PrecoUnitario;");
+			consultas.get(0).add("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+			consultas.get(0).add("Pais startsWith \"Br\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+		// Consulta arquivo Medio
+			consultas.get(1).add("Diretoria startsWith \"RA\" and Colaborador endsWith \"I\" and Cargo endsWith \"OR\" and name startsWith \"MO\" and Loja endsWith \"IZ\" and Regional startsWith \"E-\" and area endsWith\"ja\" and username startsWith \"40\"; max total_score;");
+			consultas.get(1).add("Diretoria startsWith \"RA\" and Colaborador endsWith \"I\" and Cargo endsWith \"OR\" and name startsWith \"MO\" and Loja endsWith \"IZ\" and Regional startsWith \"E-\"; max total_score;");
+			consultas.get(1).add("Diretoria endsWith \"IZ\" and Colaborador startsWith \"RA\" and Cargo startsWith \"AUX\"; max total_score;");
+		// Consulta arquivo Grande
+			consultas.get(2).add("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\" and Cliente startsWith \"HANAR\" and CEP startsWith \"05454\"; max PrecoUnitario;");
+			consultas.get(2).add("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+			consultas.get(2).add("Pais startsWith \"Br\" and Cidade startsWith \"Rio\"; max PrecoUnitario;");
+			
 			
 			int cont1 = 0;
 			for(String b : bases) {
 				StringJoiner textoArquivo = new StringJoiner("\n");
 				textoArquivo.add("\nTestes para base: " + b);
 				
-				// distribui base b
+			// distribui base b
 				t1 = System.currentTimeMillis();
 				p.readTupla(size,b);
 				t2 = System.currentTimeMillis();
@@ -51,7 +67,7 @@ public class Test2 {
 				System.out.println(s);
 				textoArquivo.add(s); t1=t2=0;
 
-				// gera os indices
+			// gera os indices
 				t1 = System.currentTimeMillis();
 				i.loadMetadata(metadataSubPath.get(cont1++));
 				t2 = System.currentTimeMillis();
@@ -69,46 +85,51 @@ public class Test2 {
 				textoArquivo.add(s); t1=t2=0;
 				
 				int cont = 0;
-				for(String c : consultas) {
-					textoArquivo.add("Consulta: " + cont++);
-					
+				for(List<String> c : consultas)
+				{
+					for(String str : c)
+					{
+						
+						textoArquivo.add("Consulta: " + cont++);
+						
 					// realiza a filtragem com a consulta c
-					qd.readAndParse(c); 
-					t1 = System.currentTimeMillis();
-					qd.filterQuery();
-					t2 = System.currentTimeMillis();
-					
-					s = "(FILTRAGEM) " + ((t2-t1)*1.0/1000); t1=t2=0;
-					System.out.println(s);
-					textoArquivo.add(s); t1=t2=0;
-					
+						qd.readAndParse(str); 
+						t1 = System.currentTimeMillis();
+						qd.filterQuery();
+						t2 = System.currentTimeMillis();
+						
+						s = "(FILTRAGEM) " + ((t2-t1)*1.0/1000); t1=t2=0;
+						System.out.println(s);
+						textoArquivo.add(s); t1=t2=0;
+						
 					// cria o cubo
-					t1 = System.currentTimeMillis();
-					qd.createCube();
-					t2 = System.currentTimeMillis();
-					
-					s = "(CRIAR CUBO) " + ((t2-t1)*1.0/1000); t1=t2=0;
-					System.out.println(s);
-					textoArquivo.add(s); t1=t2=0;
-					
+						t1 = System.currentTimeMillis();
+						qd.createCube();
+						t2 = System.currentTimeMillis();
+						
+						s = "(CRIAR CUBO) " + ((t2-t1)*1.0/1000); t1=t2=0;
+						System.out.println(s);
+						textoArquivo.add(s); t1=t2=0;
+						
 					// cacula as agregações
-					t1 = System.currentTimeMillis();
-					qd.aggregateCubes();
-					t2 = System.currentTimeMillis();
-					
-					s = "(AGREGAÇÃO)" + ((t2-t1)*1.0/1000); t1=t2=0;
-					System.out.println(s);
-					textoArquivo.add(s); t1=t2=0;
-					
+						t1 = System.currentTimeMillis();
+						qd.aggregateCubes();
+						t2 = System.currentTimeMillis();
+						
+						s = "(AGREGAÇÃO)" + ((t2-t1)*1.0/1000); t1=t2=0;
+						System.out.println(s);
+						textoArquivo.add(s); t1=t2=0;
+						
 					// limpa reultado da filtragem
-					qd.deleteFilterResult();
-				}
-				file.println(textoArquivo.toString());
-
+						qd.deleteFilterResult();
+					}
+					file.println(textoArquivo.toString());
+	
 				// limpa base distribuida
-				p.deleteDistributedBase();
+					p.deleteDistributedBase();
 				// limpa indices		
-				i.deleteIndices();
+					i.deleteIndices();
+				}
 			}
 			file.close();
 		} catch (IOException e) {
@@ -142,8 +163,8 @@ public class Test2 {
  * 	- Rest B: "Pais startsWith \"Br\" and Cidade startsWith \"Rio\"; max PrecoUnitario;"
  * 
  * - Base M.
- * 	- Rest A: 
- * 	- Rest M:
+ * 	- Rest A: "Diretoria startsWith \"RA\" and Colaborador endsWith \"I\" and Cargo endsWith \"OR\" and name startsWith \"MO\" and Loja endsWith \"IZ\" and Regional startsWith \"E-\" and area endsWith\"ja\" and username startsWith \"40\"; max total_score;"
+ * 	- Rest M: "Diretoria startsWith \"RA\" and Colaborador endsWith \"I\" and Cargo endsWith \"OR\" and name startsWith \"MO\" and Loja endsWith \"IZ\" and Regional startsWith \"E-\"; max total_score;"
  * 	- Rest B: "Diretoria endsWith \"IZ\" and Colaborador startsWith \"RA\" and Cargo startsWith \"AUX\"; max total_score;" 
  * 
  * - Base P.
