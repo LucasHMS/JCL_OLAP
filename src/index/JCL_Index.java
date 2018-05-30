@@ -32,29 +32,22 @@ public class JCL_Index {
 
 		int qtdMesure = mesureMeta.size();
 
-		String line = null;
-		FileReader f = null;
-		try
-		{
-			f = new FileReader("arq_"+coreID+".txt");
-		}
-		catch(FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-
 		// map dos indices invertidos
 		Object2ObjectMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
-		// map do jcl para dar putAll
-		//Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
 
 		// map dos mesure index
 		Object2ObjectMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
-		// map do jcl para dar putAll
-		//Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
 		System.out.println("***** iniciou a criação dos indices ******");
-
+		
+		String line = null;
+		FileReader f = null;
+		try{
+			f = new FileReader("arq_"+coreID+".txt");
+		}
+		catch(FileNotFoundException e){
+			e.printStackTrace();
+		}
 		BufferedReader reader = new BufferedReader(f);
 		// le linha a linha do arquivo
 		while((line = reader.readLine()) != null)
@@ -100,12 +93,9 @@ public class JCL_Index {
 				mesureIndex.put(splitArr[0],aux);
 			}
 		}
-		//jclInvertedIndex.putAll(invertedIndex);
-		//jclMesureIndex.putAll(mesureIndex);
 		jcl.instantiateGlobalVar(machineID+"_invertedIndex_"+coreID, invertedIndex);
 		jcl.instantiateGlobalVar(machineID+"_mesureIndex_"+coreID, mesureIndex);
-		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_invertedIndex_"+0).getCorrectResult());
-		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_mesureIndex_"+0).getCorrectResult());
+
 		System.out.println("***** finalizou a criação dos indices ******");
 	}
 
@@ -124,13 +114,9 @@ public class JCL_Index {
 		System.out.println("tamanho da map do core "+coreID+": "+map_core.size());
 		// map dos indices invertidos
 		Object2ObjectMap<String, IntCollection> invertedIndex = new Object2ObjectOpenHashMap<String, IntCollection>();
-		// map do jcl para dar putAll
-		//Map<String, IntCollection> jclInvertedIndex = new JCLHashMap<String, IntCollection>("invertedIndex_"+coreID);
 
 		// map dos mesure index
 		Object2ObjectMap<String, Int2DoubleOpenHashMap> mesureIndex = new Object2ObjectOpenHashMap<String, Int2DoubleOpenHashMap>(); 
-		// map do jcl para dar putAll
-		//Map<String, Int2DoubleOpenHashMap> jclMesureIndex = new JCLHashMap<String, Int2DoubleOpenHashMap>("mesureIndex_"+coreID); 
 
 		System.out.println("***** iniciou a criação dos indices ******");
 
@@ -173,12 +159,9 @@ public class JCL_Index {
 			}
 		}
 		
-		//jclInvertedIndex.putAll(invertedIndex);
-		//jclMesureIndex.putAll(mesureIndex);
 		jcl.instantiateGlobalVar(machineID+"_invertedIndex_"+coreID, invertedIndex);
 		jcl.instantiateGlobalVar(machineID+"_mesureIndex_"+coreID, mesureIndex);
-		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_invertedIndex_"+0).getCorrectResult());
-		//System.out.println("ID "+coreID +  ": " + jcl.getValue(machineID+"_mesureIndex_"+0).getCorrectResult());
+
 		System.out.println("***** finalizou a criação dos indices ******");
 	}
 

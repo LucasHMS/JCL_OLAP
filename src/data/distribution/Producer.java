@@ -75,7 +75,6 @@ public class Producer
 	//	envia a colecao caso sobre tuplas no fim arquivo
 		if(i != 0)
 		{
-			// System.out.println("enviou o que sobrou");
 			// System.out.println("enviou " + i);
 			sendBuffer();
 			// System.out.println("finalizou envio");
@@ -113,7 +112,7 @@ public class Producer
 		{
 			machineID = contHost;
 		}
-		Object[] args= {new ArrayList<>(colection), machineID};
+		Object[] args= {new ArrayList<>(colection), machineID, false};
 	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
     //	results.add(jcl.execute("Consumer", "save", args));

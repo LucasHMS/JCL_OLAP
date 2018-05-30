@@ -26,8 +26,7 @@ public class FileManip {
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		for(Entry<Integer,String> e : tuples.entrySet()) {
-			String aux = e.getKey() + "|" + e.getValue();
-			bw.write(aux);
+			bw.write(e.getValue());
 			bw.newLine();
 		}
 
