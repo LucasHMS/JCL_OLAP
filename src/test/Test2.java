@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import data.distribution.Producer;
+import data.distribution.BalancedProducer;
 import index.Index;
 import query.QueryDriver;
 
@@ -20,7 +20,7 @@ public class Test2 {
 			
 			Index i = new Index();
 			QueryDriver qd = new QueryDriver();
-			Producer p = new Producer();
+			BalancedProducer p = new BalancedProducer(size, false);
 
 			List<String> bases = new ArrayList<>();
 			bases.add("input/NorthwindSalesData.data");
@@ -60,7 +60,7 @@ public class Test2 {
 				
 			// distribui base b
 				t1 = System.currentTimeMillis();
-				p.readTupla(size,b);
+				p.distributeDataBase(b);
 				t2 = System.currentTimeMillis();
 				
 				String s = "(DISTRIBUIR A BASE com buffer = " + size + ") " + ((t2-t1)*1.0/1000);
@@ -80,7 +80,7 @@ public class Test2 {
 				i.createIndex("Map");
 				t2 = System.currentTimeMillis();
 				
-				s = "(CRIAR INDICES) " + ((t2-t1)*1.0/1000); t1=t2=0;
+				s = "(CRIAR INDICES) " + ((t2-t1)*1.0/1000);
 				System.out.println(s);
 				textoArquivo.add(s); t1=t2=0;
 				
@@ -89,7 +89,6 @@ public class Test2 {
 				{
 					for(String str : c)
 					{
-						
 						textoArquivo.add("Consulta: " + cont++);
 						
 					// realiza a filtragem com a consulta c
@@ -98,7 +97,7 @@ public class Test2 {
 						qd.filterQuery();
 						t2 = System.currentTimeMillis();
 						
-						s = "(FILTRAGEM) " + ((t2-t1)*1.0/1000); t1=t2=0;
+						s = "(FILTRAGEM) " + ((t2-t1)*1.0/1000);
 						System.out.println(s);
 						textoArquivo.add(s); t1=t2=0;
 						
@@ -107,7 +106,7 @@ public class Test2 {
 						qd.createCube();
 						t2 = System.currentTimeMillis();
 						
-						s = "(CRIAR CUBO) " + ((t2-t1)*1.0/1000); t1=t2=0;
+						s = "(CRIAR CUBO) " + ((t2-t1)*1.0/1000); 
 						System.out.println(s);
 						textoArquivo.add(s); t1=t2=0;
 						
@@ -116,7 +115,7 @@ public class Test2 {
 						qd.aggregateCubes();
 						t2 = System.currentTimeMillis();
 						
-						s = "(AGREGAÇÃO)" + ((t2-t1)*1.0/1000); t1=t2=0;
+						s = "(AGREGAÇÃO)" + ((t2-t1)*1.0/1000); 
 						System.out.println(s);
 						textoArquivo.add(s); t1=t2=0;
 						
@@ -149,7 +148,7 @@ public class Test2 {
  * 
  * 		Quantidade de colunos por restritividade em cada base
  * 
- * 	RESTRITIVIDADE \ BASE |___1___|___2___|___3___|
+ * 	RESTRITIVIDADE \ BASE |___G___|___M___|___P___|
  * 		Alta			  |	  6	  |	  8	  |   6	  |	
  * 		Media			  |	  4	  |	  6	  |	  4	  |
  * 		Baixa			  |	  2	  |	  3	  |	  2	  |
