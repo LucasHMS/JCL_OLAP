@@ -31,7 +31,7 @@ public class QueryDriver {
 		File f2 = new File("lib/filteroperators.jar");
 //		File f3 = new File("lib/queryelements.jar");
 		File [] jars = { f1, f2 };
-		System.out.println("registro Filter: " + jcl.register(jars, "Filter"));
+		jcl.register(jars, "Filter");
 		jcl.register(Cube.class, "Cube");
 	}
 	
