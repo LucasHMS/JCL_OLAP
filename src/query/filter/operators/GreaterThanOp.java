@@ -1,7 +1,5 @@
 package query.filter.operators;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 public class GreaterThanOp implements FilterOperator{
 
 	@Override
