@@ -184,6 +184,8 @@ public class Interpreter {
 			return 4;
 		case "=":
 			return 5;
+		case "contains":
+			return 6;
 		default:
 			return -1;
 		}
@@ -215,7 +217,7 @@ public class Interpreter {
 		}
 	}
 	
-	public static void main(String [] args) {
+	/*public static void main(String [] args) {
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
 		dimensionMeta.put("Data", 0);
 		dimensionMeta.put("Pais", 1);
@@ -238,5 +240,5 @@ public class Interpreter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 }

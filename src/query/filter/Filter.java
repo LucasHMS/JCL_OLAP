@@ -61,8 +61,9 @@ public class Filter
 		
 		Object2ObjectMap<String, IntCollection> cleanResult = generateReult(filterResults, columns);
 		
+		jcl.deleteGlobalVar(machineID+"_core_"+coreID);
+		map_core = null;
 		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, cleanResult);
-
 		System.out.println("Finalizou a Filtragem. core " + coreID);
     }
     
@@ -136,6 +137,8 @@ public class Filter
 			return new LessThanOp();
 		case 5:
 			return new EqualsToOp();
+		case 6:
+			return new ContainsOp();
 		
 		default:
 			return null;
