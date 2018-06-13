@@ -17,13 +17,14 @@ import javafx.util.Pair;
 import util.HostWrapper;
 import util.MyEntry;
 
-public class BalancedProducer {
+public class BalancedProducer implements Producer{
 	private JCL_facade jcl;
 	private List<Entry<String, String>> hostsJCL;
 	private DistributionBalancer db;
 	private BufferedReader file;
 	private int bufferSize;
 	private boolean saveToFile;
+	private static int keyCounter = 0;
 	
 	public BalancedProducer(int bufferSize, boolean saveToFile) throws IOException {
 		this.bufferSize = bufferSize;
@@ -36,20 +37,19 @@ public class BalancedProducer {
 		File [] jars = {f1,f2, f4};
 		jcl.register(jars, "Consumer");
 		
+		
 		List<Entry<String, String>> hostsJCL = jcl.getDevices();
 		List<HostWrapper> hosts = new ArrayList<>();
 		int i=0;
 		for(Entry<String,String> h : hostsJCL) {
-			HostWrapper hw = new HostWrapper(h, i);
+			HostWrapper hw = new HostWrapper(h, i++);
 			hosts.add(hw);
 		}
 		
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
-		int j = 0;
 		for(HostWrapper h : hosts) {
-			Object [] args = {new Integer(j)};
+			Object [] args = {new Integer(h.machineId)};
 			tickets.add(jcl.executeOnDevice(h.jclHost,"Consumer", "instanciateCoreMaps", args));
-			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
 
@@ -76,7 +76,9 @@ public class BalancedProducer {
 							break;
 						}
 					}
+					if(!eofFlag) break;
 				}
+				if(!eofFlag) break;
 				
 				// recupera a lista dos hots com menos memoria e a quantidade calculada para eles
 				int qtdH2 = hosts2ratio.getValue().getValue();
@@ -91,6 +93,7 @@ public class BalancedProducer {
 							break;
 						}					
 					}
+					if(!eofFlag) break;
 				}
 				if(!eofFlag) break;
 				
@@ -100,12 +103,12 @@ public class BalancedProducer {
 	
 	private List<Entry<Integer, String>> readFile() throws IOException {
 		List<Entry<Integer, String>> buffer = new ArrayList<>();
-		int i = 0; int k = 0;
+		int i = 0; 
 		
 		String line;
 		while((line = file.readLine()) != null){
-			buffer.add(new MyEntry<Integer, String>(k, k+"|"+line));
-			i++; k++;
+			buffer.add(new MyEntry<Integer, String>(keyCounter, keyCounter+"|"+line));
+			i++; keyCounter++;
 			if(i == bufferSize){
 				return buffer; // retorna um buffer completo
 			}

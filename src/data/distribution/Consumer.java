@@ -1,7 +1,6 @@
 package data.distribution;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.List;
 
 import java.util.Map.Entry;
@@ -49,6 +48,7 @@ public class Consumer {
 
 			if(saveToFile) util.FileManip.writeTuplesTxt(m, 0);
 		}
+		System.out.println("Finalizou Buffer de tamanho: " + buffer.size());
 	}
 	
 	public void instanciateCoreMaps(int machineID) {
@@ -61,9 +61,10 @@ public class Consumer {
 	}
 	
 	public int getMemory() {
-		long memorySize = ((com.sun.management.OperatingSystemMXBean) 
-							ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
-		return (int) Math.ceil(1.0*memorySize/1000000000);
+		/*long memorySize = ((com.sun.management.OperatingSystemMXBean) 
+							ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();*/
+		long memorySize = Runtime.getRuntime().maxMemory();
+		return (int) Math.floor(1.0*memorySize/1000000000);
 	}
 }
 	
