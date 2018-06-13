@@ -16,28 +16,32 @@ import interfaces.kernel.JCL_facade;
 import interfaces.kernel.JCL_result;
 import util.MyEntry;
 
-public class Producer 
-{
-	private List<Entry<Integer, String>> colection = new ArrayList<>();
-	private JCL_facade jcl = JCL_FacadeImpl.getInstance();
-	private List<Entry<String, String>> host;
-	private String tuplas;
-	private int contHost=0;
+public class InvariantProducer implements Producer{
+	private List<Entry<Integer, String>> buffer;
+	private JCL_facade jcl;
+	private List<Entry<String, String>> hosts;
+	private int contHost;
+	private int bufferSize;
+	private boolean saveToFile;
 	//private List<Future<JCL_result>> results = new ArrayList<>();
 	
-	public Producer()
-	{	
+	public InvariantProducer(int bufferSize, boolean saveToFile) {	
+		this.bufferSize = bufferSize;
+		this.saveToFile = saveToFile;
+		jcl = JCL_FacadeImpl.getInstance();
+		contHost=0;
+		buffer = new ArrayList<>();
+		
 		File f1 = new File("lib/consumer.jar");
 		File f2 = new File("lib/myentry.jar");
 		File f4 = new File("lib/filemanip.jar");
 		File [] jars = {f1,f2, f4};
 		jcl.register(jars, "Consumer");
 
-		host = jcl.getDevices();
+		hosts = jcl.getDevices();
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
 		int j = 0;
-		for(Entry<String,String> e : host) {
-			System.out.println(j);
+		for(Entry<String,String> e : hosts) {
 			Object [] args = {new Integer(j)};
 			tickets.add(jcl.executeOnDevice(e,"Consumer", "instanciateCoreMaps", args));
 			j++;
@@ -45,89 +49,69 @@ public class Producer
 		jcl.getAllResultBlocking(tickets);
 	}
 	
-	public void readTupla(int size, String fileName) throws IOException
-	{
+	public void distributeDataBase(String fileName) throws IOException {
 	//  inicio variaveis
-		tuplas = fileName;
-		BufferedReader br = new BufferedReader(new FileReader(tuplas));
-		String line = br.readLine();
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		String line = br.readLine(); // desconsiderando cabeçalho
 		int i = 0;
 		int k = 0;
 		
 		//  recebe tupla do arquivo
-		while((line = br.readLine()) != null)
-		{
+		while((line = br.readLine()) != null) {
 		//  Passo-2: cria uma lista de tuplas
 			makeBuffer(line, k);
 		//	incrementa a chave
 			i++;
 			k++;
-			if(i == size)
-			{
+			if(i == bufferSize) {
 			//	Passo-3: envia para as maquinas
-				// System.out.println("enviou " + i);
 				sendBuffer();
-				// System.out.println("finalizou envio");
-				colection.clear();
+				buffer.clear();
 				i = 0;
 			}
 		}
 	//	envia a colecao caso sobre tuplas no fim arquivo
-		if(i != 0)
-		{
-			// System.out.println("enviou " + i);
+		if(i != 0) {
 			sendBuffer();
-			// System.out.println("finalizou envio");
 		}
 		
-		// System.out.println("Bloqueando para finalizar");
-		
-		//jcl.getAllResultBlocking(results);
-		// System.out.println("finalizou");
 		br.close();
 	}
 	
-	public void makeBuffer(String line, int i)
-	{
+	private void makeBuffer(String line, int i) {
 	//	cria uma Entry que recebe a chave da tupla e a linha do arquivo
 		Entry<Integer, String> item = new MyEntry<Integer, String>(i, i+"|"+line);
 	//	adiciona a Entry na lista de colection
-		colection.add(item);
+		buffer.add(item);
 	}
 	
-	public void sendBuffer()
-	{
+	private void sendBuffer() {
 		int machineID;
 	//	recebe o ID da maquina para onde a lista de tuplas ira
-		if(contHost == host.size())
-		{
-			machineID = contHost - host.size();
+		if(contHost == hosts.size()) {
+			machineID = contHost - hosts.size();
 		}
-		else if(contHost>host.size())
-		{
-			machineID = contHost - host.size();
-			while(machineID >= host.size()) machineID -= host.size();
+		else if(contHost>hosts.size()) {
+			machineID = contHost - hosts.size();
+			while(machineID >= hosts.size()) machineID -= hosts.size();
 		}
-		else
-		{
+		else {
 			machineID = contHost;
 		}
-		Object[] args= {new ArrayList<>(colection), machineID, false};
+		Object[] args= {new ArrayList<>(buffer), machineID, saveToFile};
 	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
-    //	results.add(jcl.execute("Consumer", "save", args));
 		try {
-			jcl.executeOnDevice(host.get(machineID),"Consumer", "save", args).get();
+			jcl.executeOnDevice(hosts.get(machineID),"Consumer", "save", args).get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-		// System.out.println("enviou para maquina " + machineID);
 		contHost++;
 	}
 	
 	public void deleteDistributedBase() {
-		for(int i=0;i<host.size();i++) {
-			int n = jcl.getDeviceCore(host.get(i));
+		for(int i=0;i<hosts.size();i++) {
+			int n = jcl.getDeviceCore(hosts.get(i));
 			for(int j=0;j<n;j++) {
 				jcl.deleteGlobalVar(i+"_core_"+j);
 			}
