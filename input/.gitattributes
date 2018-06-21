@@ -1,0 +1,6 @@
+NorthwindSalesData4.data filter=lfs diff=lfs merge=lfs -text
+NorthwindSalesData.data filter=lfs diff=lfs merge=lfs -text
+NorthwindSalesData1.data filter=lfs diff=lfs merge=lfs -text
+NorthwindSalesData2.data filter=lfs diff=lfs merge=lfs -text
+NorthwindSalesData3.data filter=lfs diff=lfs merge=lfs -text
+SaberFast/SaberFast.data filter=lfs diff=lfs merge=lfs -text
