@@ -61,6 +61,32 @@ public class QueryElements {
 		agregationColumns.add(column);
 	}
 
+	
+	
+	public void setColumnList(List<String> columnList) {
+		this.columnList = columnList;
+	}
+
+	public void setOperatorList(List<Integer> operatorList) {
+		this.operatorList = operatorList;
+	}
+
+	public void setOpArgList(List<String> opArgList) {
+		this.opArgList = opArgList;
+	}
+
+	public void setIntraOpFilter(List<Integer> intraOpFilter) {
+		this.intraOpFilter = intraOpFilter;
+	}
+
+	public void setAgregationOp(List<Integer> agregationOp) {
+		this.agregationOp = agregationOp;
+	}
+
+	public void setAgregationColumns(List<Integer> agregationColumns) {
+		this.agregationColumns = agregationColumns;
+	}
+
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("colum list: " + columnList + "\n");

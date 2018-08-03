@@ -35,7 +35,7 @@ public class QueryDriver {
 		jcl.register(Cube.class, "Cube");
 	}
 	
-	public void readAndParse() {
+/*	public void readAndParse() {
 		Interpreter i = new Interpreter();
 		i.readQuery();
 		try {
@@ -46,12 +46,12 @@ public class QueryDriver {
 		
 		elements = i.getElements();
 		if(VERBOSITY) System.out.println(elements);
-	}
+	}*/
 	
 	public void readAndParse(String queryText) {
 		Interpreter i = new Interpreter();
 		try {
-			i.parseQuery(queryText);
+			i.parse(queryText);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

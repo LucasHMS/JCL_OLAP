@@ -1,164 +1,146 @@
 package query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 
 public class Interpreter {
+	private Map<String, Integer> dimensionMeta;
+	private Map<String, Integer> mesureMeta;
 	private QueryElements elements;
-	private Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
-	private Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
-	private String queryText;
 	
 	public Interpreter() {
 		elements = new QueryElements();
-		queryText = "";
+		dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
+		mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");
 	}
 	
-	public QueryElements getElements() {
-		return elements;
-	}
-	
-	public void readQuery() {
-		Scanner keyboard = new Scanner(System.in);
-		queryText = keyboard.nextLine();
-		keyboard.close();
-	}
-	
-	public void parseQuery() throws Exception {
-		for(int i=0; i<queryText.length();i++){
-			i = parseDimension(i);
-			i = parseOperator(i);
-			i = parseArg(i);
-			if (i < queryText.length())
-				i = parseOpIntraFilter(i);
+	public void parse(String queryText) throws Exception {
+		List<String> filters = tokenize(queryText.split(";")[0]);
+		for (int i=0;i<filters.size();) {
+			i = parseFilter(i, filters);
+			if (i >= filters.size()) break;
+			i = parseIntraFilter(i,filters);
 		}
-	}
-	
-	public void parseQuery(String queryText) throws Exception {
-		this.queryText = queryText;
-		for(int i=0; i<queryText.length();i++){
-			i = parseDimension(i);
-			i = parseOperator(i);
-			i = parseArg(i);
-			i = parseOpIntraFilter(i);
-			if (queryText.charAt(i) == ';') {
-				i+=2;
-				for(;i<queryText.length();i++) {
-					i = parseAgregator(i);
-					i = parseMesure(i);
-				}
-//				System.out.println("fim filter");
-			}
-		}
-	}
-	
-	private int parseDimension(int pos) throws Exception {
-		String column = "";
-		char c = queryText.charAt(pos++);
-		do {
-			column += c;
-			c = queryText.charAt(pos++);
-		}while(c != ' ');
-		
-		if (!checkDimension(column)) {
-			throw new Exception("Invalid Column " + column);
-		}
-		
-		elements.setColumnList(column);		
-		
-		return pos;
-	}
-		
-	private int parseOperator(int pos) throws Exception {
-		String op = "";
-		char c = queryText.charAt(pos++);
-		do {
-			op += c;
-			c = queryText.charAt(pos++);
-		}while(c != ' ');
-		
-		int opID = checkOperator(op);
-		if (opID == -1) {
-			throw new Exception("Invalid Operator " + op);
-		}
-		
-		elements.setOperatorList(opID);
 
-		return pos;	
+		List<String> aggregations = tokenize(queryText.split(";")[1]);		
+		for(int i=0;i<aggregations.size();) {
+			i = parseAggregation(i, aggregations);
+		}
+		
+		if(elements.getOperatorList().contains(7))
+			orderInquire();
 	}
 	
-	private int parseArg(int pos) {
-		String arg = "";
-		char c = queryText.charAt(++pos); pos++;
-		do {
-			arg += c;
-			c = queryText.charAt(pos++);
-		}while(c != '"');
+	private void orderInquire() {
+		List<Integer> opList = elements.getOperatorList();
+		List<String> columnList = elements.getColumnList();
+		List<Integer> auxOpList = new ArrayList<>();
+		List<String> auxColumnList = new ArrayList<>();
+		while(opList.contains(7)) {
+			int indexInq = opList.lastIndexOf(7);
+			opList.remove(indexInq);
+			String col = columnList.remove(indexInq);
+			auxOpList.add(7);
+			auxColumnList.add(col);
+		}
+		opList.addAll(auxOpList);
+		columnList.addAll(auxColumnList);
+
+		elements.setOperatorList(opList);
+		elements.setColumnList(columnList);
+	}
+	
+	private List<String> tokenize(String queryText){
+		List<String> tokens = new ArrayList<String>();
+		Matcher m = Pattern.compile("([^\'^ ]\\S*|\'.+?\')\\s*").matcher(queryText);
+		while (m.find())
+		    tokens.add(m.group(1).replace("\'", "")); 
+
+		return tokens;
+	}
+	
+	
+	private int parseIntraFilter(int i, List<String> tokens) throws Exception {
+		int op = checkIntraOp(tokens.get(i));
 		
+		if(op == -1) throw new Exception("Invalid Column " + tokens.get(i));
+	
+		elements.setIntraOpFilter(op);
+		i++;
+		
+		return i;
+	}
+
+	// Parsing filters
+	private int parseFilter(int i, List<String> tokens) throws Exception {
+		parseDimension(tokens.get(i));
+		i++;
+		int op = parseOperator(tokens.get(i));
+		i++;
+		if (op != 7) {
+			parseArg(tokens.get(i));
+			i++;
+		}
+		
+		return i;
+	}
+	
+	private int parseDimension(String column) throws Exception {
+		if(!checkDimension(column)) throw new Exception("Invalid Column " + column);
+		
+		elements.setColumnList(column);
+		
+		return 1;
+	}
+
+	private int parseOperator(String operator) throws Exception {
+		int op = checkOperator(operator);
+		
+		if(op == -1) throw new Exception("Invalid Operator " + operator);
+		
+		elements.setOperatorList(op);
+		
+		return op;
+	}
+
+	private int parseArg(String arg) {
 		elements.setOpArgList(arg);
+		
+		return 1;
+	}
+		
+	// Parsing Aggregations
+	private int parseAggregation(int i, List<String> tokens) throws Exception {
+		parseAggregator(tokens.get(i));
+		i++;
+		parseMeasure(tokens.get(i));
+		i++;
+		return i;
+	}
 
-		if(queryText.charAt(pos) == ';') return pos;
+	private int parseAggregator(String aggregator) throws Exception {
+		int op = checkAgregationOP(aggregator);
 		
-		return ++pos;
+		if(op == -1) throw new Exception("Invalid Operator " + aggregator);
+		
+		elements.setAgregationOp(op);
+		
+		return 1;
 	}
 	
-	private int parseOpIntraFilter(int pos) throws Exception {
-		
-		if(queryText.charAt(pos) == ';') return pos;
-		
-		String op = "";
-		char c = queryText.charAt(pos++);
-		do {
-			op += c;
-			c = queryText.charAt(pos++);
-		}while(c != ' ');
-		
-		int opID = checkIntraOp(op);
-		if (opID == -1) {
-			throw new Exception("Invalid Operator " + op);
-		}
-		
-		elements.setIntraOpFilter(opID);
-		
-		return --pos;
-	}
-	
-	private int parseMesure(int pos) throws Exception {
-		String column = "";
-		char c = queryText.charAt(pos++);
-		do {
-			column += c;
-			c = queryText.charAt(pos++);
-		}while(!(c == ' ' || c == ';'));
-		
-		int p = checkMesure(column); 
-		if (p == -1) {
-			throw new Exception("Invalid Column " + column);
-		}
-		
-		elements.setAgregationColumns(p);		
-		
-		return pos;
-	}
-	
-	private int parseAgregator(int pos) throws Exception {
-		String op = "";
-		char c = queryText.charAt(pos++);
-		do {
-			op += c;
-			c = queryText.charAt(pos++);
-		}while(c != ' ');
-		
-		int opID = checkAgregationOP(op);
-		if (opID == -1) {
-			throw new Exception("Invalid Operator " + op);
-		}
-		
-		elements.setAgregationOp(opID);
+	private int parseMeasure(String measure) throws Exception {
+		int pos = checkMesure(measure);
 
-		return pos;	
+		if(pos == -1) throw new Exception("Invalid Column " + measure);
+		
+		elements.setAgregationColumns(pos);
+		
+		return 1;
 	}
 	
 	private boolean checkDimension(String column) {
@@ -173,10 +155,10 @@ public class Interpreter {
 	}
 	
 	private int checkOperator(String op) {
-		switch (op) {
-		case "startsWith":
+		switch (op.toLowerCase()) {
+		case "startswith":
 			return 1;
-		case "endsWith":
+		case "endswith":
 			return 2;
 		case ">":
 			return 3;
@@ -186,6 +168,8 @@ public class Interpreter {
 			return 5;
 		case "contains":
 			return 6;
+		case "inquire":
+			return 7;
 		default:
 			return -1;
 		}
@@ -203,7 +187,7 @@ public class Interpreter {
 	}
 	
 	private int checkAgregationOP(String op) {
-		switch (op) {
+		switch (op.toLowerCase()) {
 		case "min":
 			return 1;
 		case "max":
@@ -216,8 +200,12 @@ public class Interpreter {
 			return -1;
 		}
 	}
+
+	public QueryElements getElements() {
+		return elements;
+	}
 	
-	/*public static void main(String [] args) {
+/*	public static void main(String [] args) {
 		Map<String, Integer> dimensionMeta = JCL_FacadeImpl.GetHashMap("Dimension");	
 		dimensionMeta.put("Data", 0);
 		dimensionMeta.put("Pais", 1);
@@ -229,14 +217,12 @@ public class Interpreter {
 		dimensionMeta.put("Produto", 7);
 		
 		Map<String, Integer> mesureMeta = JCL_FacadeImpl.GetHashMap("Mesure");	
-		mesureMeta.put("Preco", 0);
+		mesureMeta.put("PrecoUnitario", 0);
 		mesureMeta.put("Quantidade", 1);
-	
-		Interpreter i = new Interpreter();
-//		i.readQuery();
+		
+		Interpreter parser = new Interpreter();
 		try {
-			i.parseQuery("Categoria > \"5\" and Pais startsWith \"B\" and Produto endsWith \"s\" and Cidade startsWith \"Rio\"; max Preco;");
-			System.out.println(i.getElements());
+			parser.parse("CEP inquire and Pais startsWith 'S fsd' and Cidade inquire and Empresa endsWith 'R sdfs'; max PrecoUnitario min Quantidade");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

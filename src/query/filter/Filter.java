@@ -1,5 +1,6 @@
 package query.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +47,13 @@ public class Filter
 		Int2ObjectMap<String> map_core = (Int2ObjectMap<String>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
 		jclInvertedIndex =  (Object2ObjectMap<String, IntCollection>) jcl.getValue(machineID+"_invertedIndex_"+coreID).getCorrectResult();
 
+		List<String> inquireCols = new ArrayList<>();
+		while(operators.contains(7)) {
+			operators.remove(operators.size()-1);
+			String col = columns.remove(columns.size()-1);
+			inquireCols.add(col);
+		}
+
 		// lista para salvar as maps de resultado de cada filtro da consulta
 		Int2ObjectMap<String> filterResults = new Int2ObjectOpenHashMap<>();
 		filterResults = runFilter(map_core, columns.get(0), operators.get(0), args.get(0));
@@ -57,6 +65,10 @@ public class Filter
 			filterResults.clear();
 			filterResults = null;
 			filterResults = new Int2ObjectOpenHashMap<>(aux);
+		}
+		
+		if(inquireCols.size() > 0) {
+			columns.addAll(inquireCols);
 		}
 		
 		Object2ObjectMap<String, IntCollection> cleanResult = generateReult(filterResults, columns);
@@ -95,6 +107,7 @@ public class Filter
 		}
 		return finalResult;
     }
+    
     private String cleanTuple(String [] splitedTuple, List<String> columns) {
     	StringBuilder cleanTuple = new StringBuilder(); 
     		
@@ -115,7 +128,8 @@ public class Filter
     	int pos = dimensionMeta.get(column);
 		return mesureMeta.size()+1+pos;
     }
-	/*
+	
+    /*
 	 * 1 = starts with
      * 2 = ends with
      * 3 = >
