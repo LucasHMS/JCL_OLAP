@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import cube.aggregation.operators.AggregationOperator;
-import cube.aggregation.operators.MaxV;
+import cube.aggregation.operators.*;
 import it.unimi.dsi.fastutil.doubles.DoubleCollection;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
@@ -38,17 +38,25 @@ public class Aggregation {
 	public void instantiateOperator(int opCode) {
 		switch (opCode) {
 		case 1:
-			op = null;
-			break;
+			op = new MinV();
 		case 2:
 			op = new MaxV();
-			break;
 		case 3:
-			op = null;
-			break;
+			op = new SumV();
 		case 4:
-			op = null;
-			break;
+			op = new MeanV();
+		case 5:
+			op = new MedianV();
+		case 6:
+			op = new ModeV();
+		case 7:
+			op = new SkewnessV();
+		case 8:
+			op = new StdV();
+		case 9:
+			op = new VarianceV();
+		case 10:
+			op = new GeometricMeanV();
 		default:
 			break;
 		}

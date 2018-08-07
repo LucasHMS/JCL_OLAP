@@ -194,8 +194,21 @@ public class Interpreter {
 			return 2;
 		case "sum":
 			return 3;
-		case "avg":
+		case "mean":
 			return 4;
+		case "median":
+			return 5;
+		case "mode":
+			return 6;
+		case "skewness":
+			return 7;
+		case "std":
+			return 8;
+		case "variance":
+			return 9;
+		case "geometric":
+			return 10;
+			
 		default:
 			return -1;
 		}
