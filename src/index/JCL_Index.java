@@ -127,7 +127,7 @@ public class JCL_Index {
 			// rodamos a quantidade de colunas das dimensions
 			for(int i=0;i<dimensionMeta.size();i++) {
 				// pega o conteudo da coluna
-				String d = splitArr[col++];
+				String d = "$"+i+"$"+splitArr[col++];
 				// verifica se este conteudo ja existe na minha map(no caso, o conteudo e' a chave da map)
 				if(invertedIndex.get(d) == null) {
 					// cria uma lista que guarda as PK onde houve a ocorrencia de d(chave da map)
