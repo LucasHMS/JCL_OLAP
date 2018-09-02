@@ -27,4 +27,14 @@ public class GreaterThanOp implements FilterOperator{
     	return x;
 	}
 
+	@Override
+	public boolean op(int record, int usrArg) {
+		return record > usrArg;
+	}
+
+	@Override
+	public boolean op(float record, float usrArg) {
+		return record > usrArg;
+	}
+
 }
