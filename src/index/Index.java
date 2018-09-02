@@ -20,6 +20,7 @@ public class Index {
 	public Index() {
 		jcl = JCL_FacadeImpl.getInstance();
 		jcl.register(JCL_Index.class, "JCL_Index");
+		jcl.register(JCL_IntegerBaseIndex.class, "JCL_IntegerBaseIndex");
 		devices = jcl.getDevices();
 	}
 
@@ -67,6 +68,20 @@ public class Index {
 		System.out.println("Mesure Index");
 		for(int x=0;x<4;x++)
 			System.out.println("CORE " + x + " " + jcl.getValue(0+"_mesureIndex_"+x).getCorrectResult());*/
+	}
+	
+	public void createIntegerIndex() {
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
+		int j = 0;
+		for(Entry<String,String> e : devices) {
+			int n = jcl.getDeviceCore(e);
+			for(int i=0;i<n;i++) {
+				Object [] args = {new Integer(j), new Integer(i)};
+				tickets.add(jcl.executeOnDevice(e,"JCL_IntegerBaseIndex", "createIndex", args));
+			}
+			j++;
+		}
+		jcl.getAllResultBlocking(tickets);
 	}
 	
 	public void deleteIndices() {
