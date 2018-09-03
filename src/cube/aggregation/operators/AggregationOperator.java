@@ -1,5 +1,5 @@
 package cube.aggregation.operators;
 
 public interface AggregationOperator {
-	public double compute(Object args);
+	public float compute(Object args);
 }

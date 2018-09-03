@@ -1,20 +1,25 @@
 package cube.aggregation.operators;
 
-import it.unimi.dsi.fastutil.doubles.DoubleCollection;
-import org.apache.commons.math3.stat.StatUtils; 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.floats.FloatCollection;
+
+import org.apache.commons.math3.stat.StatUtils;
 
 public class ModeV implements AggregationOperator{
 
 	@Override
-	public double compute(Object args) {
-		DoubleCollection values = (DoubleCollection) args;
-		double [] v_arr = values.toDoubleArray();
-		double[] d = StatUtils.mode(v_arr);
+	public float compute(Object args) {
+		FloatCollection values = (FloatCollection) args;		
+		DoubleList dl = new DoubleArrayList();
+		values.forEach(v -> dl.add((double) v));
+		
+		double[] d = StatUtils.mode(dl.toDoubleArray());
 		
 		if(d.length > 1) 
-			return StatUtils.mean(d);
+			return (float) StatUtils.mean(d);
 		
-		return d[0];
+		return (float) d[0];
 	}
 
 }
