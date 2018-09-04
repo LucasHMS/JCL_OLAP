@@ -1,6 +1,5 @@
 package test;
 
-import java.io.IOException;
 
 //import data.distribution.BalancedProducer;
 import data.distribution.InvariantProducer;
@@ -48,7 +47,7 @@ public class Test1 {
 			qd.aggregateCubes();
 			t2 = System.currentTimeMillis();
 			System.out.println("(AGREGAÇÃO): " + ((t2-t1)*1.0/1000) + "s");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

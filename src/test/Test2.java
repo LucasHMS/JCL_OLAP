@@ -1,6 +1,5 @@
 package test;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +131,7 @@ public class Test2 {
 				}
 			}
 			file.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,7 +1,5 @@
 package test;
 
-import java.io.IOException;
-
 import data.distribution.IntegerBaseInvariantProducer;
 import data.distribution.Producer;
 import index.Index;
@@ -14,13 +12,13 @@ public class Test4 {
 			boolean saveToFile = false;
 			Producer p = new IntegerBaseInvariantProducer(size,saveToFile);
 			long t1 = System.currentTimeMillis();
-			p.distributeDataBase("input/IntBases/100_6_7/Base.data");
+			p.distributeDataBase("input/IntBases/100000_5_2/Base.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS "+ saveToFile +") Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
 			Index i = new Index();
 			t1 = System.currentTimeMillis();
-			i.loadMetadata("input/IntBases/100_6_7/");
+			i.loadMetadata("input/IntBases/100000_5_2/");
 			t2 = System.currentTimeMillis();
 			System.out.println("(CARREGAR METADADOS): " + ((t2-t1)*1.0/1000) + "s");
 			
@@ -41,13 +39,12 @@ public class Test4 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR CUBO): " + ((t2-t1)*1.0/1000) + "s");
 		
-			IntegerBaseQueryDriver.VERBOSITY = true;
 			t1 = System.currentTimeMillis();
 			qd.aggregateCubes();
 			t2 = System.currentTimeMillis();
 			System.out.println("(AGREGAÇÃO): " + ((t2-t1)*1.0/1000) + "s");
 		
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
