@@ -50,39 +50,73 @@ public class IntegerBaseInvariantProducer implements Producer {
 		jcl.getAllResultBlocking(tickets);
 	}
 	
-	public void distributeDataBase(String fileName) throws IOException {
+	public void distributeDataBase(String fileName) throws IOException, InterruptedException, ExecutionException {
 	//  inicio variaveis
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		String line = br.readLine(); // desconsiderando cabeçalho
+		BufferedReader br = new BufferedReader(new FileReader(fileName)); br.readLine(); // desconsiderando cabeçalho
+		int baseSize = Integer.parseInt(br.readLine());
+		int portion = baseSize/hosts.size();
+		int reminder = baseSize%hosts.size();
+		
+		distributeDataBaseUtil(br, portion, reminder);
+		
+		//distributeDataBaseUtil(br);
+		
+		br.close();
+	}
+	
+	// le o arquivo em blocos gigantes divididos igualmente entre os hosts
+	private void distributeDataBaseUtil(BufferedReader br, int portion, int reminder) throws IOException, InterruptedException, ExecutionException {
+		String line;
 		int i = 0;
 		int k = 0;
-		
-		//  recebe tupla do arquivo
+		for(Entry<String,String> device : hosts) {
+			for(int j=0; j<portion; j++) {
+				line = br.readLine();
+				IntList values = new IntArrayList(Arrays.asList(line.split("\\|")).stream().mapToInt(Integer::parseInt).toArray());
+				buffer.add(new Pair<Integer, IntList>(k++,values));
+			}
+			sendBuffer(device, i++);
+			buffer.clear();
+		}
+		if(reminder != 0) {
+			while((line = br.readLine()) != null) {
+				IntList values = new IntArrayList(Arrays.asList(line.split("\\|")).stream().mapToInt(Integer::parseInt).toArray());
+				buffer.add(new Pair<Integer, IntList>(k++,values));
+			}
+			sendBuffer(hosts.get(0), 0);
+			buffer.clear();
+		}
+	}
+
+	// le o arquivo em buffers enviados em lista circular para cara host
+	private void distributeDataBaseUtil(BufferedReader br) throws IOException, InterruptedException, ExecutionException {
+		String line;
+		int i = 0;
+		int k = 0;
+
 		while((line = br.readLine()) != null) {
-//			line = k+"|"+line;
 			IntList values = new IntArrayList(Arrays.asList(line.split("\\|")).stream().mapToInt(Integer::parseInt).toArray());
 			buffer.add(new Pair<Integer, IntList>(k,values));
-		//  Passo-2: cria uma lista de tuplas
-//			makeBuffer(values, k);
-		//	incrementa a chave
 			i++;
 			k++;
 			if(i == bufferSize) {
-			//	Passo-3: envia para as maquinas
 				sendBuffer();
 				buffer.clear();
 				i = 0;
 			}
 		}
-	//	envia a colecao caso sobre tuplas no fim arquivo
 		if(i != 0) {
 			sendBuffer();
 		}
-		
-		br.close();
+
+	}
+
+	private void sendBuffer(Entry<String,String> device, int machineID) throws InterruptedException, ExecutionException {
+		Object[] args= {new ArrayList<>(buffer), machineID, saveToFile};
+		jcl.executeOnDevice(hosts.get(machineID),"IntegerBaseConsumer", "save", args).get();
 	}
 	
-	private void sendBuffer() {
+	private void sendBuffer() throws InterruptedException, ExecutionException {
 		int machineID;
 	//	recebe o ID da maquina para onde a lista de tuplas ira
 		if(contHost == hosts.size()) {
@@ -98,11 +132,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 		Object[] args= {new ArrayList<>(buffer), machineID, saveToFile};
 	
 	//	passa para a maquina do cluster todos os dados (lista de tuplas e ID)
-		try {
-			jcl.executeOnDevice(hosts.get(machineID),"IntegerBaseConsumer", "save", args).get();
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
+		jcl.executeOnDevice(hosts.get(machineID),"IntegerBaseConsumer", "save", args).get();
 		contHost++;
 	}
 	
