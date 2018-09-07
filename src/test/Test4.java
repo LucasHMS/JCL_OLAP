@@ -4,21 +4,23 @@ import data.distribution.IntegerBaseInvariantProducer;
 import data.distribution.Producer;
 import index.Index;
 import query.IntegerBaseQueryDriver;
+import static query.IntegerBaseQueryDriver.VERBOSITY;
 
 public class Test4 {
 	public static void main(String [] args){
 		try {
+			VERBOSITY = false;
 			int size = 5000;
 			boolean saveToFile = false;
 			Producer p = new IntegerBaseInvariantProducer(size,saveToFile);
 			long t1 = System.currentTimeMillis();
-			p.distributeDataBase("input/IntBases/100000_5_2/Base.data");
+			p.distributeDataBase("input/IntBases/100_5_2/Base.data");
 			long t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR ARQUIVOS "+ saveToFile +") Tempo gasto com " + size + ": " + ((t2-t1)*1.0/1000) + "s");
 			
 			Index i = new Index();
 			t1 = System.currentTimeMillis();
-			i.loadMetadata("input/IntBases/100000_5_2/");
+			i.loadMetadata("input/IntBases/100_5_2/");
 			t2 = System.currentTimeMillis();
 			System.out.println("(CARREGAR METADADOS): " + ((t2-t1)*1.0/1000) + "s");
 			
