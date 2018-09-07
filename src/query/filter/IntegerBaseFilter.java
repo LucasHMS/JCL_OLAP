@@ -31,7 +31,6 @@ public class IntegerBaseFilter {
     @SuppressWarnings("unchecked")
 	public void filtra(List<String> columns, List<Integer> operators, List<String> args, 
 			List<Integer> intraOpFilter, int machineID, int coreID){
-    	System.out.println("filter");
 		System.out.println("Iniciando Filter. core " + coreID);
 
 		Int2ObjectMap<IntList> localBase = (Int2ObjectMap<IntList>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
@@ -50,44 +49,13 @@ public class IntegerBaseFilter {
 			aux = null;
 		}
 		
-		int [] cards = new int[columns.size()];
-
 		Object2ObjectMap<IntList, IntList> cleanResult = generateReult(filterResults, columns);
 		
-		System.out.println("Calculando a cardinalidades. core " + coreID);
-		List<IntSet> cardinalities = new  ArrayList<>();
-		for(int i=0; i<operators.size()&&operators.get(i)!=7; i++) cardinalities.add(new IntOpenHashSet());
-		for(Object2ObjectMap.Entry<IntList, IntList> e : cleanResult.object2ObjectEntrySet()) {
-			IntList filteredTuple = e.getKey();
-			for(int i=0;i<filteredTuple.size();i++) {
-				int val = filteredTuple.get(i);
-				cardinalities.get(i).add(val);
-			}
-		}
-		for(int i=0; i<operators.size()&&operators.get(i)!=7; i++) {
-			cards[i] = cardinalities.get(i).size();
-		}
-		
-		if(operators.indexOf(7) >= 0) {
-			System.out.println("Calculando a cardinalidade INQUIRE. core " + coreID);		
-			for(int i=operators.indexOf(7);i<operators.size();i++) {
-				Int2ObjectMap<IntList> invertedIndex = (Int2ObjectMap<IntList>) jcl.getValue(MessageFormat.format("{0}_invertedIndex_{1}_{2}", machineID, i, coreID)).getCorrectResult();
-				cards[i] = invertedIndex.size();
-			}
-		}
-		int cubeDim = 1;
-		for(int i=0;i<cards.length;i++) {
-			cubeDim *= cards[i];
-		}
-		if(cubeDim != 0) cubeDim = cubeDim + 1;
-
 		localBase = null;
 		jcl.deleteGlobalVar(machineID+"_core_"+coreID);
 		
 		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, cleanResult);
-		jcl.instantiateGlobalVar(machineID+"_cubeDim_"+coreID, cubeDim);
-		
-		System.out.println(machineID+"_cubeDim_"+coreID+": " + cubeDim);
+
 		System.out.println("Finalizou a Filtragem. core " + coreID);
     }
     
