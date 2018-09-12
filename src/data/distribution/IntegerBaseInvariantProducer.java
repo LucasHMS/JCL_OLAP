@@ -26,6 +26,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 	private int contHost;
 	private int bufferSize;
 	private boolean saveToFile;
+	private List<Future<JCL_result>> tickets;
 	
 	public IntegerBaseInvariantProducer(int bufferSize, boolean saveToFile) {	
 		this.bufferSize = bufferSize;
@@ -33,6 +34,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 		jcl = JCL_FacadeImpl.getInstance();
 		contHost=0;
 		buffer = new ArrayList<>();
+		tickets = new ArrayList<>();
 		
 		File f1 = new File("lib/integerconsumer.jar");
 		File f4 = new File("lib/filemanip.jar");
@@ -70,6 +72,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 		int i = 0;
 		int k = 0;
 		for(Entry<String,String> device : hosts) {
+			System.out.println("lendo porcao do device " + i);
 			for(int j=0; j<portion; j++) {
 				line = br.readLine();
 				IntList values = new IntArrayList(Arrays.asList(line.split("\\|")).stream().mapToInt(Integer::parseInt).toArray());
@@ -86,6 +89,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 			sendBuffer(hosts.get(0), 0);
 			buffer.clear();
 		}
+		jcl.getAllResultBlocking(tickets);
 	}
 
 	// le o arquivo em buffers enviados em lista circular para cara host
@@ -113,7 +117,7 @@ public class IntegerBaseInvariantProducer implements Producer {
 
 	private void sendBuffer(Entry<String,String> device, int machineID) throws InterruptedException, ExecutionException {
 		Object[] args= {new ArrayList<>(buffer), machineID, saveToFile};
-		jcl.executeOnDevice(hosts.get(machineID),"IntegerBaseConsumer", "save", args).get();
+		tickets.add(jcl.executeOnDevice(hosts.get(machineID),"IntegerBaseConsumer", "save", args));
 	}
 	
 	private void sendBuffer() throws InterruptedException, ExecutionException {
