@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntList;
 import implementations.collections.JCLHashMap;
 
 public class FileManip {
@@ -27,6 +28,25 @@ public class FileManip {
 
 		for(Entry<Integer,String> e : tuples.entrySet()) {
 			bw.write(e.getValue());
+			bw.newLine();
+		}
+
+		bw.close();
+		fw.close();
+	}
+	
+	public static void writeTuplesTxt(Int2ObjectMap<IntList> tuples, int core_num) throws IOException {
+		File f = new File("arq_"+core_num+".txt");
+		FileWriter fw = new FileWriter(f,false);
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		for(Int2ObjectMap.Entry<IntList> e : tuples.int2ObjectEntrySet()) {
+			StringBuilder strb = new StringBuilder();
+			strb.append(e.getIntKey() + "|");
+			e.getValue().forEach(a -> strb.append(a+"|"));
+			strb.deleteCharAt(strb.length()-1);
+			
+			bw.write(strb.toString());
 			bw.newLine();
 		}
 

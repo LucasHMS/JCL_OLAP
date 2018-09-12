@@ -34,7 +34,7 @@ public class IntegerBaseConsumer {
 			m_aux.putAll(m);
 			jcl.setValueUnlocking(machineID+"_core_"+i, m_aux);
 			
-//			if(saveToFile) util.FileManip.writeTuplesTxt(m, i);
+			if(saveToFile) util.FileManip.writeTuplesTxt(m, i);
 		}
 		if(buffSize%localCores != 0){
 			Int2ObjectMap<IntList> m = new Int2ObjectOpenHashMap<>();
@@ -46,7 +46,7 @@ public class IntegerBaseConsumer {
 			m_aux.putAll(m);
 			jcl.setValueUnlocking(machineID+"_core_0", m_aux);
 
-//			if(saveToFile) util.FileManip.writeTuplesTxt(m, 0);
+			if(saveToFile) util.FileManip.writeTuplesTxt(m, 0);
 		}
 		System.out.println("Finalizou Buffer de tamanho: " + buffer.size());
 	}
