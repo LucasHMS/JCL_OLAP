@@ -10,7 +10,7 @@ public class CubeKernel  extends Kernel {
 	private int MAX_SIZE; 		 // quantidade total de tuplas geradas com todas agregacoes (N_GEN_TUPLES*LINES)
 	private int [] arr;			 // array com as tuplas originais
 	private int [] result;		 // array para as tuplas geradas 
-	public static int AGG_WILDCARD = 0;
+	public  int AGG_WILDCARD = 0;
 
 	public CubeKernel(int LINES, int COLS, int [] arr) {
 		this.LINES = LINES;
