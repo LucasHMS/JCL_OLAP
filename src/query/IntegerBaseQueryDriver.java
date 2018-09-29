@@ -27,11 +27,12 @@ public class IntegerBaseQueryDriver {
 		jcl = JCL_FacadeImpl.getInstance();
 		devices = jcl.getDevices();
 		
-		File f1 = new File("lib/integerfilter.jar");
-		File f2 = new File("lib/filteroperators.jar");
-		File [] jars = { f1, f2 };
-		jcl.register(jars, "IntegerBaseFilter");
+		File [] filter = { new File("lib/integerfilter.jar"), new File("lib/filteroperators.jar") };
+		jcl.register(filter, "IntegerBaseFilter");
 		jcl.register(IntegerBaseCube.class, "IntegerBaseCube");
+		
+		File [] gpucube = { new File("lib/gpucube.jar"), new File("lib/aparapi-full.jar") };
+		jcl.register(gpucube, "GPUCube");
 	}
 	
 	public void readAndParse(String queryText) {
@@ -105,7 +106,30 @@ public class IntegerBaseQueryDriver {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void aggregateCubes() {
+	public void createCubeGPU() {
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
+		int nDimensions = elements.getColumnList().size();
+		for(int i=0;i<devices.size();i++) {
+			Entry<String,String> e = devices.get(i);
+			Object [] args = {i,nDimensions, elements.getAgregationColumns().get(0)};
+			tickets.add(jcl.executeOnDevice(e,"GPUCube", "createCube", args));
+		}
+		jcl.getAllResultBlocking(tickets);
+		
+		if(VERBOSITY) {
+			for(int i=0;i<devices.size();i++) {
+				System.out.println("M="+i);
+				Object2ObjectMap<IntList, FloatCollection> filterResults = (Object2ObjectMap<IntList, FloatCollection>)
+																		jcl.getValue("resource_"+i).getCorrectResult();
+				for(Object2ObjectMap.Entry<IntList, FloatCollection> e : filterResults.object2ObjectEntrySet()) {
+					System.out.println(e.getKey() + " => " + e.getValue());
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void aggregateSubCubesCPU(){
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
 		List<Integer> aggColuns = elements.getAgregationColumns();
 		for(int i=0;i<devices.size();i++) {
@@ -113,7 +137,7 @@ public class IntegerBaseQueryDriver {
 			int n = jcl.getDeviceCore(e);
 			for(int j=0;j<n;j++) {
 				Object [] args = {i,j,aggColuns};
-				tickets.add(jcl.executeOnDevice(e,"IntegerBaseCube", "getMeasureValues", args));
+				tickets.add(jcl.executeOnDevice(e,"Cube", "getMeasureValues", args));
 			}
 		}
 		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
@@ -123,13 +147,27 @@ public class IntegerBaseQueryDriver {
 			aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) r.getCorrectResult());
 		}
 		
+		measureCalculus(aggregationValues);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void aggregateSubCubesGPU(){
+		List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues = new ArrayList<>();
+		for(int i=0;i<devices.size();i++) {
+			aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) jcl.getValue("resource_"+i).getCorrectResult());
+		}
+		
+		measureCalculus(aggregationValues);
+	}
+	
+	public void measureCalculus(List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues) {
 		IntegerBaseAggregation ag = new IntegerBaseAggregation(elements.getAgregationOp().get(0));
 		ag.mergeSubCubes(aggregationValues);
 		Object2FloatMap<IntList>  aggResult = ag.aggregate();
 		
 		if(VERBOSITY) {
-			for(Object2FloatMap.Entry<IntList> e : aggResult.object2FloatEntrySet()) {
-				System.out.println(e.getKey() + " => " + e.getFloatValue());
+			for(Entry<IntList, Float> e : aggResult.entrySet()) {
+				System.out.println(e.getKey() + " : " + e.getValue());
 			}
 		}
 	}
