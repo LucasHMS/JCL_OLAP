@@ -50,7 +50,7 @@ public class GPUCube {
 	    int COLS = nDimensions;
 	    
 	    CubeKernel kernel = new CubeKernel(LINES, COLS, filterResultArr);
-        Device device = Device.best();
+        Device device = Device.bestGPU();
         Range range = device.createRange(LINES);
         kernel.execute(range);
         

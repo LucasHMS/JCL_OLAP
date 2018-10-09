@@ -137,7 +137,7 @@ public class IntegerBaseQueryDriver {
 			int n = jcl.getDeviceCore(e);
 			for(int j=0;j<n;j++) {
 				Object [] args = {i,j,aggColuns};
-				tickets.add(jcl.executeOnDevice(e,"Cube", "getMeasureValues", args));
+				tickets.add(jcl.executeOnDevice(e,"IntegerBaseCube", "getMeasureValues", args));
 			}
 		}
 		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
