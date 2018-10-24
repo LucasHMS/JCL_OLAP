@@ -2,6 +2,7 @@ package index;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
@@ -43,10 +44,16 @@ public class Index {
 		}
 
 		//escreve os arquivos metadata em todas as maquinas do cluster
-		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "writeMetaData", args));
+		jcl.getAllResultBlocking(jcl.executeAll("JCL_IntegerBaseIndex", "writeMetaData", args));
 
 		//cria as hashMaps com os metadados para cada maquina
-		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
+		jcl.getAllResultBlocking(jcl.executeAll("JCL_IntegerBaseIndex", "readMetaData"));
+			
+		Map<Object, Object> m = JCL_FacadeImpl.GetHashMap("Dimension");
+		System.out.println("dimension meta: " + m.size() );
+		for(Entry<Object, Object> e : m.entrySet()) {
+			System.out.println(e);
+		}
 	}
 
 	public void createIndex(String origin){
