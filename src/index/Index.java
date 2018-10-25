@@ -48,12 +48,6 @@ public class Index {
 
 		//cria as hashMaps com os metadados para cada maquina
 		jcl.getAllResultBlocking(jcl.executeAll("JCL_IntegerBaseIndex", "readMetaData"));
-			
-		Map<Object, Object> m = JCL_FacadeImpl.GetHashMap("Dimension");
-		System.out.println("dimension meta: " + m.size() );
-		for(Entry<Object, Object> e : m.entrySet()) {
-			System.out.println(e);
-		}
 	}
 
 	public void createIndex(String origin){
