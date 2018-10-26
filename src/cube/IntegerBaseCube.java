@@ -43,7 +43,7 @@ public class IntegerBaseCube {
 
 	public IntList arrangeTuple(IntList tuple, int dimension) {
 		int [] tupleArr = tuple.toIntArray();
-		tupleArr[dimension] = -1;
+		tupleArr[dimension] = 0;
 
 		return new IntArrayList(tupleArr);
 	}
