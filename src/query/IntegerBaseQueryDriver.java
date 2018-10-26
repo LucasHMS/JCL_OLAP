@@ -77,7 +77,7 @@ public class IntegerBaseQueryDriver {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void createCube() {
+	public void createCubeCPU() {
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
 		int nDimensions = elements.getColumnList().size();
 		for(int i=0;i<devices.size();i++) {

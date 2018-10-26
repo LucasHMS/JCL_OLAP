@@ -37,7 +37,7 @@ public class Test4 {
 			System.out.println("(FILTRAGEM): " + ((t2-t1)*1.0/1000) + "s");
 			
 			t1 = System.currentTimeMillis();
-			qd.createCube();
+			qd.createCubeCPU();
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR CUBO): " + ((t2-t1)*1.0/1000) + "s");
 		

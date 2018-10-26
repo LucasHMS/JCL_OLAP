@@ -37,6 +37,7 @@ public class Test5 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM): " + ((t2-t1)*1.0/1000) + "s");
 			
+			VERBOSITY = true;
 			t1 = System.currentTimeMillis();
 			qd.createCubeGPU();
 			t2 = System.currentTimeMillis();
