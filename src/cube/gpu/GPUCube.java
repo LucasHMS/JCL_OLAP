@@ -1,7 +1,11 @@
 package cube.gpu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aparapi.Range;
 import com.aparapi.device.Device;
+import com.aparapi.internal.opencl.*;
 
 import implementations.dm_kernel.user.JCL_FacadeImpl;
 import interfaces.kernel.JCL_facade;
@@ -64,6 +68,21 @@ public class GPUCube {
         
         jcl.instantiateGlobalVar("resource_"+machineID, resource);
         
+	}
+	
+	public boolean hasWorkingGPU() {
+		try {
+			List<OpenCLPlatform> platforms = new ArrayList<>();
+			platforms = (new OpenCLPlatform()).getOpenCLPlatforms();
+			if (platforms.isEmpty() || !platforms.get(0).getVendor().contains("NVIDIA")) {
+				System.out.println("NOT GPU CAPABLE");
+				return false;
+			}
+			return true;	
+		} catch (Exception e) {
+			System.out.println("NOT GPU CAPABLE");
+			return false;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

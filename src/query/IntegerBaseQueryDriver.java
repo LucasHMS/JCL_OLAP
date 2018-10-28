@@ -2,7 +2,9 @@ package query;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
@@ -20,12 +22,15 @@ public class IntegerBaseQueryDriver {
 	private JCL_facade jcl;
 	private List<Entry<String,String>> devices;
 	private QueryElements elements;
+	private Map<Entry<String,String>,Boolean> GPUCapabilities;
 	
 	public static boolean VERBOSITY = false;
 
 	public IntegerBaseQueryDriver() {
 		jcl = JCL_FacadeImpl.getInstance();
 		devices = jcl.getDevices();
+		
+		GPUCapabilities = new HashMap<>();
 		
 		File [] filter = { new File("lib/integerfilter.jar"), new File("lib/filteroperators.jar") };
 		jcl.register(filter, "IntegerBaseFilter");
@@ -178,6 +183,76 @@ public class IntegerBaseQueryDriver {
 			for(int j=0;j<n;j++) {
 				jcl.deleteGlobalVar(i+"_filter_core_"+j);
 			}
+		}
+	}
+	
+	
+	public void hybridCubeCreation() {
+		queryGPUCapabilities();
+		
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
+		int nDimensions = elements.getColumnList().size();
+		
+		for(int i=0;i<devices.size();i++) {
+			Entry<String,String> e = devices.get(i);
+			
+			if (GPUCapabilities.get(e)) { // GPU Cube
+				Object [] args = {i,nDimensions, elements.getAgregationColumns().get(0)};
+				tickets.add(jcl.executeOnDevice(e,"GPUCube", "createCube", args));
+			} else { // CPU Cube
+				int n = jcl.getDeviceCore(e);
+				for(int j=0;j<n;j++) { 
+					Object [] args = {i,j,nDimensions};
+					tickets.add(jcl.executeOnDevice(e,"IntegerBaseCube", "createCube", args));
+				}
+			}
+		}
+		
+		jcl.getAllResultBlocking(tickets);		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void hybridSubCubeAggregation() {
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
+		List<Integer> aggColuns = elements.getAgregationColumns();
+		List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues = new ArrayList<>();
+		
+		for(int i=0;i<devices.size();i++) {
+			Entry<String,String> e = devices.get(i);
+			
+			if (GPUCapabilities.get(e)) { // GPU Agregation
+				aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) jcl.getValue("resource_"+i).getCorrectResult());
+			} else { // CPU Agregation
+				int n = jcl.getDeviceCore(e);
+				for(int j=0;j<n;j++) {
+					Object [] args = {i,j,aggColuns};
+					tickets.add(jcl.executeOnDevice(e,"IntegerBaseCube", "getMeasureValues", args));
+				}
+			}
+		}
+		
+		if (!tickets.isEmpty()) {
+			List<JCL_result> results = jcl.getAllResultBlocking(tickets);
+			for(JCL_result r: results) {
+				aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) r.getCorrectResult());
+			}
+		}
+		
+		measureCalculus(aggregationValues);
+	}
+	
+	public void queryGPUCapabilities() {
+		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
+
+		for (Entry<String, String> e : devices) {
+			tickets.add(jcl.executeOnDevice(e,"GPUCube", "hasWorkingGPU"));
+		}
+		
+		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
+		
+		for(int i=0; i<devices.size(); i++) {
+			boolean gpuCap = (boolean) results.get(i).getCorrectResult();
+			GPUCapabilities.put(devices.get(i), gpuCap);
 		}
 	}
 }
