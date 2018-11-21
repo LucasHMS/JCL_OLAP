@@ -95,7 +95,7 @@ public class GPUCube {
 														        jcl.getValue(machineID+"_mesureIndex_"+i).getCorrectResult();
 			
 			jcl.setValueUnlocking(machineID+"_filter_core_"+i, null);
-			jcl.setValueUnlocking(machineID+"_f_mesureIndex_"+i, null);
+			jcl.setValueUnlocking(machineID+"_mesureIndex_"+i, null);
 			
 			for (Object2ObjectMap.Entry<IntList, IntList> e : filtRes.object2ObjectEntrySet()) {
 				FloatCollection measureValues = new FloatArrayList();
