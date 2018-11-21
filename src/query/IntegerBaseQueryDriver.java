@@ -40,6 +40,10 @@ public class IntegerBaseQueryDriver {
 		jcl.register(gpucube, "GPUCube");
 	}
 	
+	public QueryElements getQueryElements(){
+		return elements;
+	}
+	
 	public void readAndParse(String queryText) {
 		Interpreter i = new Interpreter();
 		try {
@@ -65,6 +69,8 @@ public class IntegerBaseQueryDriver {
 			}
 		}
 		jcl.getAllResultBlocking(tickets);
+		
+		tickets.forEach(jcl::removeResult);
 		
 		if(VERBOSITY) {
 			for(int i=0;i<devices.size();i++) {
@@ -95,6 +101,8 @@ public class IntegerBaseQueryDriver {
 		}
 		jcl.getAllResultBlocking(tickets);
 		
+		tickets.forEach(jcl::removeResult);
+		
 		if(VERBOSITY) {
 			for(int i=0;i<devices.size();i++) {
 				int n = jcl.getDeviceCore(devices.get(i));
@@ -121,6 +129,8 @@ public class IntegerBaseQueryDriver {
 		}
 		jcl.getAllResultBlocking(tickets);
 		
+		tickets.forEach(jcl::removeResult);
+		
 		if(VERBOSITY) {
 			for(int i=0;i<devices.size();i++) {
 				System.out.println("M="+i);
@@ -137,6 +147,7 @@ public class IntegerBaseQueryDriver {
 	public void aggregateSubCubesCPU(){
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
 		List<Integer> aggColuns = elements.getAgregationColumns();
+		System.out.println("recuperando measure values" + " => " + new java.util.Date());
 		for(int i=0;i<devices.size();i++) {
 			Entry<String,String> e = devices.get(i);
 			int n = jcl.getDeviceCore(e);
@@ -146,6 +157,9 @@ public class IntegerBaseQueryDriver {
 			}
 		}
 		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
+		System.out.println("RECUPEROU" + " => " + new java.util.Date());
+
+		tickets.forEach(jcl::removeResult);
 		
 		List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues = new ArrayList<>();
 		for(JCL_result r: results) {
@@ -157,18 +171,23 @@ public class IntegerBaseQueryDriver {
 	
 	@SuppressWarnings("unchecked")
 	public void aggregateSubCubesGPU(){
+		System.out.println("recuperando resources...." + " => " + new java.util.Date());
 		List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues = new ArrayList<>();
 		for(int i=0;i<devices.size();i++) {
 			aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) jcl.getValue("resource_"+i).getCorrectResult());
+			System.out.println("size:" + aggregationValues.get(i).size() + " => " + new java.util.Date());
 		}
-		
+		System.out.println("RECUPEROU" + " => " + new java.util.Date());
 		measureCalculus(aggregationValues);
 	}
 	
 	public void measureCalculus(List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues) {
 		IntegerBaseAggregation ag = new IntegerBaseAggregation(elements.getAgregationOp().get(0));
+		System.out.println("unindo subcubos... " + aggregationValues.size() + " => " + new java.util.Date());
 		ag.mergeSubCubes(aggregationValues);
+		System.out.println("agregando measures... " + " => " + new java.util.Date());
 		Object2FloatMap<IntList>  aggResult = ag.aggregate();
+		System.out.println("AGREGOU" + " => " + new java.util.Date());
 		
 		if(VERBOSITY) {
 			for(Entry<IntList, Float> e : aggResult.entrySet()) {
@@ -180,6 +199,11 @@ public class IntegerBaseQueryDriver {
 	public void deleteFilterResult() {
 		for(int i=0;i<devices.size();i++) {
 			int n = jcl.getDeviceCore(devices.get(i));
+			Entry<String,String> e = devices.get(i);
+			
+			if (GPUCapabilities.get(e)) { // GPU Cube
+				jcl.deleteGlobalVar("resource_"+i);
+			}
 			for(int j=0;j<n;j++) {
 				jcl.deleteGlobalVar(i+"_filter_core_"+j);
 			}
@@ -208,7 +232,9 @@ public class IntegerBaseQueryDriver {
 			}
 		}
 		
-		jcl.getAllResultBlocking(tickets);		
+		jcl.getAllResultBlocking(tickets);
+		
+		tickets.forEach(jcl::removeResult);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -216,18 +242,20 @@ public class IntegerBaseQueryDriver {
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>();
 		List<Integer> aggColuns = elements.getAgregationColumns();
 		List<Object2ObjectMap<IntList, FloatCollection>> aggregationValues = new ArrayList<>();
-		
+//		System.out.println("aggregando resultados " + (new java.util.Date()));
 		for(int i=0;i<devices.size();i++) {
 			Entry<String,String> e = devices.get(i);
-			
+//			System.out.println("CPU iniciando coleta do device " + i + (new java.util.Date()));
 			if (GPUCapabilities.get(e)) { // GPU Agregation
 				aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) jcl.getValue("resource_"+i).getCorrectResult());
+//				System.out.println("GPU coletou device " + i + (new java.util.Date()));
 			} else { // CPU Agregation
 				int n = jcl.getDeviceCore(e);
 				for(int j=0;j<n;j++) {
 					Object [] args = {i,j,aggColuns};
 					tickets.add(jcl.executeOnDevice(e,"IntegerBaseCube", "getMeasureValues", args));
 				}
+//				System.out.println("CPU coletou device " + i + (new java.util.Date()));
 			}
 		}
 		
@@ -236,6 +264,8 @@ public class IntegerBaseQueryDriver {
 			for(JCL_result r: results) {
 				aggregationValues.add((Object2ObjectMap<IntList, FloatCollection>) r.getCorrectResult());
 			}
+			
+			tickets.forEach(jcl::removeResult);
 		}
 		
 		measureCalculus(aggregationValues);
@@ -250,9 +280,17 @@ public class IntegerBaseQueryDriver {
 		
 		List<JCL_result> results = jcl.getAllResultBlocking(tickets);
 		
+		tickets.forEach(jcl::removeResult);
+		
 		for(int i=0; i<devices.size(); i++) {
 			boolean gpuCap = (boolean) results.get(i).getCorrectResult();
 			GPUCapabilities.put(devices.get(i), gpuCap);
 		}
+		
+	}
+	
+	public void jclDestroy(){
+		deleteFilterResult();
+		jcl.destroy();
 	}
 }

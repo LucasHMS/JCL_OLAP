@@ -127,7 +127,7 @@ public class Test2 {
 				// limpa base distribuida
 					p.deleteDistributedBase();
 				// limpa indices		
-					i.deleteIndices();
+//					i.deleteIndices();
 				}
 			}
 			file.close();

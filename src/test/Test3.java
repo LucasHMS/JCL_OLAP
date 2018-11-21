@@ -11,7 +11,7 @@ public static void main(String [] args){
 			
 			Index i = new Index();
 			t1 = System.currentTimeMillis();
-			i.deleteIndices();
+//			i.deleteIndices();
 			t2 = System.currentTimeMillis();
 			System.out.println("(DELETAR INDICES): " + ((t2-t1)*1.0/1000) + "s");
 			
