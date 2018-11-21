@@ -31,6 +31,7 @@ public class IntegerBaseFilter {
     @SuppressWarnings("unchecked")
 	public void filtra(List<String> columns, List<Integer> operators, List<String> args, 
 			List<Integer> intraOpFilter, int machineID, int coreID){
+    	System.out.print("");
 		System.out.println("Iniciando Filter. core " + coreID);
 
 		Int2ObjectMap<IntList> localBase = (Int2ObjectMap<IntList>) jcl.getValue(machineID+"_core_"+coreID).getCorrectResult();
@@ -56,7 +57,7 @@ public class IntegerBaseFilter {
 		
 		jcl.instantiateGlobalVar(machineID+"_filter_core_"+coreID, cleanResult);
 
-		System.out.println("Finalizou a Filtragem. core " + coreID);
+		System.out.println("Finalizou a Filtragem. core " + coreID + "size: " + cleanResult.size());
     }
     
     private Int2ObjectMap<IntList> runFilter(Int2ObjectMap<IntList> tuples, Int2ObjectMap<IntList> localBase,
