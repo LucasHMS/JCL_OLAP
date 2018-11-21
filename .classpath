@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="lib/jclUser.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math3.jar"/>
 	<classpathentry kind="lib" path="lib/aparapi-full.jar"/>
+	<classpathentry kind="lib" path="lib/json-simple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
