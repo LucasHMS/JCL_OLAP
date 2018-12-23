@@ -2,6 +2,7 @@ package index;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
@@ -43,11 +44,15 @@ public class Index {
 		}
 
 		//escreve os arquivos metadata em todas as maquinas do cluster
-		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "writeMetaData", args));
+		List<Future<JCL_result>> tickets = jcl.executeAll("JCL_IntegerBaseIndex", "writeMetaData", args);
+		jcl.getAllResultBlocking(tickets);
+		tickets.forEach(jcl::removeResult);
 
 		//cria as hashMaps com os metadados para cada maquina
-		jcl.getAllResultBlocking(jcl.executeAll("JCL_Index", "readMetaData"));
-	}
+		tickets = jcl.executeAll("JCL_IntegerBaseIndex", "readMetaData"); 
+		jcl.getAllResultBlocking(tickets);
+		tickets.forEach(jcl::removeResult);
+}
 
 	public void createIndex(String origin){
 		List<Future<JCL_result>> tickets = new ArrayList<Future<JCL_result>>(); 
@@ -62,6 +67,8 @@ public class Index {
 		}
 		jcl.getAllResultBlocking(tickets);
 		
+		tickets.forEach(jcl::removeResult);
+
 		/*System.out.println("Inverted Index");
 		for(int x=0;x<4;x++) 
 			System.out.println("CORE " + x + " " + jcl.getValue(0+"_invertedIndex_"+x).getCorrectResult());
@@ -82,13 +89,18 @@ public class Index {
 			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
+		
+		tickets.forEach(jcl::removeResult);
+
 	}
 	
-	public void deleteIndices() {
+	public void deleteIndices(int nDimensions) {
 		for(int i=0;i<devices.size();i++) {
 			int n = jcl.getDeviceCore(devices.get(i));
 			for(int j=0;j<n;j++) {
-				jcl.deleteGlobalVar(i+"_invertedIndex_"+j);
+				for(int k=0; k<nDimensions; k++){
+					jcl.deleteGlobalVar(i+"_invertedIndex_"+k+"_"+j);
+				}
 				jcl.deleteGlobalVar(i+"_mesureIndex_"+j);
 			}
 		}

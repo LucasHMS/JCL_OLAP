@@ -1,12 +1,13 @@
 package test;
 
+import static query.IntegerBaseQueryDriver.VERBOSITY;
+
 import data.distribution.IntegerBaseInvariantProducer;
 import data.distribution.Producer;
 import index.Index;
 import query.IntegerBaseQueryDriver;
-import static query.IntegerBaseQueryDriver.VERBOSITY;
 
-public class Test4 {
+public class Test5 {
 	public static void main(String [] args){
 		try {
 			VERBOSITY = false;
@@ -36,16 +37,17 @@ public class Test4 {
 			t2 = System.currentTimeMillis();
 			System.out.println("(FILTRAGEM): " + ((t2-t1)*1.0/1000) + "s");
 			
+			VERBOSITY = true;
 			t1 = System.currentTimeMillis();
-			qd.createCubeCPU();
+			qd.createCubeGPU();
 			t2 = System.currentTimeMillis();
 			System.out.println("(CRIAR CUBO): " + ((t2-t1)*1.0/1000) + "s");
 		
 			t1 = System.currentTimeMillis();
-			qd.aggregateSubCubesCPU();
+			qd.aggregateSubCubesGPU();
 			t2 = System.currentTimeMillis();
 			System.out.println("(AGREGAÇÃO): " + ((t2-t1)*1.0/1000) + "s");
-		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

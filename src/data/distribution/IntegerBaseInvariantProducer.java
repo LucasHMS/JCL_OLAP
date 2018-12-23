@@ -50,12 +50,15 @@ public class IntegerBaseInvariantProducer implements Producer {
 			j++;
 		}
 		jcl.getAllResultBlocking(tickets);
+		
+		tickets.forEach(jcl::removeResult);
+
 	}
 	
 	public void distributeDataBase(String fileName) throws IOException, InterruptedException, ExecutionException {
 	//  inicio variaveis
 		BufferedReader br = new BufferedReader(new FileReader(fileName)); br.readLine(); // desconsiderando cabeçalho
-		int baseSize = Integer.parseInt(br.readLine());
+		int baseSize = Integer.parseInt(br.readLine().trim());
 		int portion = baseSize/hosts.size();
 		int reminder = baseSize%hosts.size();
 		
@@ -90,6 +93,8 @@ public class IntegerBaseInvariantProducer implements Producer {
 			buffer.clear();
 		}
 		jcl.getAllResultBlocking(tickets);
+		
+		tickets.forEach(jcl::removeResult);
 	}
 
 	// le o arquivo em buffers enviados em lista circular para cara host
